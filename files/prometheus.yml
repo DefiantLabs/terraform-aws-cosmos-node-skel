@@ -1,0 +1,68 @@
+# my global config
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          # - alertmanager:9093
+
+
+rule_files:
+  # - "first_rules.yml"
+
+
+scrape_configs:
+
+  - job_name: "prometheus"
+
+    static_configs:
+      - targets: ["localhost:9094"]
+
+
+  - job_name: cosmos
+    static_configs:
+      - targets: ['localhost:26660']
+
+  - job_name: node
+    static_configs:
+      - targets: ['localhost:9105']
+
+  # specific validator(s)
+  - job_name:       'validator'
+    scrape_interval: 15s
+    metrics_path: /metrics/validator
+    static_configs:
+      - targets:
+        - valoperaddress
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_address
+      - source_labels: [__param_address]
+        target_label: instance
+      - target_label: __address__
+        replacement: localhost:9300
+  # specific wallet(s)
+  - job_name:       'wallet'
+    scrape_interval: 15s
+    metrics_path: /metrics/wallet
+    static_configs:
+      - targets:
+        - nodeaddress
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_address
+      - source_labels: [__param_address]
+        target_label: instance
+      - target_label: __address__
+        replacement: localhost:9300
+
+  # all validators
+  - job_name:       'validators'
+    scrape_interval: 15s
+    metrics_path: /metrics/validators
+    static_configs:
+      - targets:
+        - localhost:9300

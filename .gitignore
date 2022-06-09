@@ -1,0 +1,9 @@
+# Terraform
+.terraform
+*.tfstate
+*.tfstate.backup
+*.terraform.lock.hcl
+.terragrunt-cache
+
+secrets.txt
+examples/env.hcl
