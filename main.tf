@@ -101,7 +101,7 @@ resource "aws_s3_object" "install_node" {
 
     })
   )
-  etag = filemd5("files/install_node.sh")
+  etag = filemd5("${path.module}/files/install_node.sh")
 }
 
 resource "aws_s3_object" "install_monitor" {
@@ -112,7 +112,7 @@ resource "aws_s3_object" "install_monitor" {
       node_denom             = var.node_denom
     })
   )
-  etag = filemd5("files/prometheus.yml")
+  etag = filemd5("${path.module}/files/install_monitor.sh")
 }
 
 resource "aws_s3_object" "prometheus_conf" {
@@ -121,7 +121,7 @@ resource "aws_s3_object" "prometheus_conf" {
   content_base64 = base64encode(
     file("${path.module}/files/prometheus.yml")
   )
-  etag = filemd5("files/prometheus.yml")
+  etag = filemd5("${path.module}/files/prometheus.yml")
 }
 
 resource "aws_s3_object" "dashboard" {
@@ -130,7 +130,7 @@ resource "aws_s3_object" "dashboard" {
   content_base64 = base64encode(
     file("${path.module}/files/dashboard.yml")
   )
-  etag = filemd5("files/dashboard.yml")
+  etag = filemd5("${path.module}/files/dashboard.yml")
 }
 
 resource "aws_s3_object" "datasource" {
@@ -139,7 +139,7 @@ resource "aws_s3_object" "datasource" {
   content_base64 = base64encode(
     file("${path.module}/files/datasource.yml")
   )
-  etag = filemd5("files/datasource.yml")
+  etag = filemd5("${path.module}/files/datasource.yml")
 }
 
 
@@ -163,19 +163,19 @@ resource "aws_s3_bucket_server_side_encryption_configuration" "conf_bucket" {
 
 resource "aws_s3_bucket_policy" "conf_bucket_policy" {
   bucket = aws_s3_bucket.conf_bucket.id
-  policy = templatefile("./files/application_bucket_policy.json", { application_instance_role_arn = aws_iam_role.application_instance_role.arn, backup_bucket_arn = aws_s3_bucket.conf_bucket.arn })
+  policy = templatefile("${path.module}/files/application_bucket_policy.json", { application_instance_role_arn = aws_iam_role.application_instance_role.arn, backup_bucket_arn = aws_s3_bucket.conf_bucket.arn })
 }
 
 resource "aws_iam_role" "application_instance_role" {
   name_prefix           = "application_instance_role"
   force_detach_policies = true
-  assume_role_policy    = templatefile("./files/application_instance_assume_role_policy.json", { dns_suffix = data.aws_partition.current.dns_suffix })
+  assume_role_policy    = templatefile("${path.module}/files/application_instance_assume_role_policy.json", { dns_suffix = data.aws_partition.current.dns_suffix })
 }
 
 resource "aws_iam_role_policy" "application_instance_role_policy" {
   name_prefix = "application_instance_elb_policy"
   role        = aws_iam_role.application_instance_role.id
-  policy      = templatefile("./files/application_instance_role_policy.json", { partition = data.aws_partition.current.partition })
+  policy      = templatefile("${path.module}/files/application_instance_role_policy.json", { partition = data.aws_partition.current.partition })
 }
 
 resource "aws_iam_role_policy_attachment" "application_instance_role_ssm_attachment" {
@@ -246,7 +246,7 @@ resource "aws_instance" "application_instance" {
     throughput  = 125
   }
 
-  user_data = templatefile("./files/application-cloud-config.yml", {
+  user_data = templatefile("${path.module}/files/application-cloud-config.yml", {
     conf_bucket = aws_s3_bucket.conf_bucket.bucket
   })
 
