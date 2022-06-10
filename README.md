@@ -126,15 +126,15 @@ Instead of SSM, you can use SSH by doing the following:
 ssh -i private.key ubuntu@ip
 ```
 
-# Run installer manually
-Shortly after you connect, you should see the following file in /root/.  Execute this file to begin the install.  You can watch the progress interactively, or review it in `/root/install_node.log` at a later time.
+# Automated Installer
+Shortly after you connect, the instacne will run `/root/install_node.sh`.  You can watch the progress by doing `tail -f /root/install_node.log`. Keep in mind this may take a while depending on the snapshot you used.
 ```
 ./install_node.sh
 ```
 
 # Optional - Install Monitoring Software
 Prometheus, node_exporter, cosmos_exporter, grafana, dashboards
-**Note:** The some aspects of the dashboard require the chain to be fully synced, and the validator to be created.  Make sure you update your node and valoper address in `install_monitor.sh`.  You can connect to grafana by going to http://ip:3000.  The default user/pass is admin/admin.
+**Note:** The some aspects of the dashboard require the chain to be fully synced, and the validator to be created.  Make sure you update your node and valoper address in `install_monitor.sh`.  You can connect to grafana by going to http://ip:3000.  The default user/pass is admin/admin. The following dashboard is recomended to be installed manually.  https://grafana.com/grafana/dashboards/15991-cosmos-validator
 ```
 ./install_monitor.sh
 ```

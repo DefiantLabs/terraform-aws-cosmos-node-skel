@@ -26,4 +26,4 @@ runcmd:
     #!/bin/bash
     aws s3 sync s3://${conf_bucket} /root/
     chmod 755 /root/*.sh
-    # ./install_node.sh
+    ./install_node.sh
