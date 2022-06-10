@@ -1,7 +1,4 @@
 
-provider "aws" {
-  region = "us-east-1"
-}
 
 data "aws_partition" "current" {}
 
@@ -36,20 +33,6 @@ resource "aws_key_pair" "node" {
   key_name   = "node"
   public_key = var.key_pair
 }
-
-resource "aws_security_group" "shared_application_security_group" {
-  name_prefix = "application_sg"
-  description = "Allow ssh between in local security group"
-
-  vpc_id = var.vpc_id
-  ingress {
-    from_port = 22
-    to_port   = 22
-    self      = true
-    protocol  = "tcp"
-  }
-}
-
 
 
 resource "aws_s3_object" "install_node" {
@@ -157,73 +140,16 @@ resource "aws_iam_instance_profile" "application_instance_profile" {
   role        = aws_iam_role.application_instance_role.name
 }
 
-
-resource "aws_security_group" "application_security_group" {
-  name_prefix = "application_sg"
-  description = "Allow ssh, http ingress"
-
-  vpc_id = var.vpc_id
-  ingress {
-    from_port   = 26656
-    to_port     = 26656
-    cidr_blocks = ["0.0.0.0/0"]
-    protocol    = "tcp"
-  }
-  ingress {
-    from_port   = 26657
-    to_port     = 26657
-    cidr_blocks = ["0.0.0.0/0"]
-    protocol    = "tcp"
-  }
-  ingress {
-    from_port   = 9090
-    to_port     = 9090
-    cidr_blocks = ["0.0.0.0/0"]
-    protocol    = "tcp"
-  }
-
-  ingress {
-    from_port   = 9091
-    to_port     = 9091
-    cidr_blocks = ["0.0.0.0/0"]
-    protocol    = "tcp"
-  }
-
-  ingress {
-    from_port   = 1317
-    to_port     = 1317
-    cidr_blocks = ["0.0.0.0/0"]
-    protocol    = "tcp"
-  }
-  ingress {
-    from_port   = 3000
-    to_port     = 3000
-    cidr_blocks = ["0.0.0.0/0"]
-    protocol    = "tcp"
-  }
-  egress {
-    from_port   = 0
-    to_port     = 0
-    cidr_blocks = ["0.0.0.0/0"]
-    protocol    = "-1"
-  }
-}
-
-
-
 resource "aws_instance" "application_instance" {
   #checkov:skip=CKV_AWS_79
   #checkov:skip=CKV_AWS_8
   ami = "ami-01f18be4e32df20e2"
   # ami           = data.aws_ami.ubuntu.id
-  key_name      = aws_key_pair.node.key_name
-  subnet_id     = var.subnet_id
-  private_ip    = "10.0.101.11"
-  instance_type = var.instance_type
-  vpc_security_group_ids = [
-    aws_security_group.application_security_group.id,
-    aws_security_group.shared_application_security_group.id
-  ]
+  key_name               = aws_key_pair.node.key_name
+  subnet_id              = var.subnet_id
+  instance_type          = var.instance_type
+  vpc_security_group_ids = var.vpc_security_group_ids
+
   iam_instance_profile        = aws_iam_instance_profile.application_instance_profile.name
   associate_public_ip_address = true
 

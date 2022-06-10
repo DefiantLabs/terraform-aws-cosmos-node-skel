@@ -17,10 +17,40 @@ module "vpc" {
   }
 }
 
+resource "aws_security_group" "node" {
+  name        = "allow_public"
+  description = "Allow public to communicate with node"
+  vpc_id      = module.vpc.vpc_id
+
+  dynamic "ingress" {
+    for_each = [26656, 26657, 9090, 9091, 1317, 3000]
+    content {
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "tcp"
+      cidr_blocks = ["0.0.0.0/0"]
+    }
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = {
+    Name = "allow_public"
+  }
+}
+
 module "osmosis_test4" {
   source = "../../"
 
-  vpc_id    = module.vpc.vpc_id
+  vpc_id = module.vpc.vpc_id
+  vpc_security_group_ids = [
+    aws_security_group.node.id
+  ]
   subnet_id = module.vpc.public_subnets[0]
   natgw_id  = module.vpc.natgw_ids[0]
 
