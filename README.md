@@ -60,13 +60,6 @@ aws-vault exec dev_identity -- sts get-caller-identity
 avsh terraform_admin
 ```
 
-## Create and Customize Environment File
-Copy a template file to `env.hcl` and customize.
-```
-cd examples/single_node
-cp env_template_juno.hcl env.hcl
-```
-
 ## Deploy a pre-built example.  
 In the examples folder are pre-built configs for common validator setups.  For example to build a single public juno testnet validator you would.
 
