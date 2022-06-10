@@ -1,4 +1,5 @@
 #!/bin/bash -x
+exec > >(tee install_node.log)
 
 # HOME is not set in cloud-config.
 export HOME=`getent passwd "$(whoami)" | cut -d: -f6`
@@ -48,7 +49,7 @@ cd ..
 
 # Build Node from source
 git clone ${node_source}
-cd $(basename ${node_source} | tr -d ".git")
+cd $(basename ${node_source} | cut -d "." -f1)
 git fetch
 git checkout $VERSION
 make install
@@ -69,7 +70,7 @@ if ${node_use_snapshot} ; then
   ${node_snapshot_code}
 fi
 
-echo $(${node_genesis}) > $DAEMON_HOME/config/genesis.json
+${node_genesis}
 sed -i "s/^moniker *=.*/moniker = \"${moniker}\"/" $DAEMON_HOME/config/config.toml
 sed -i "/^external_address = .*/ s//external_address = \"$(curl -s ifconfig.me):26656\"/" $DAEMON_HOME/config/config.toml
 sed -i "s/^max_num_inbound_peers *=.*/max_num_inbound_peers = \"${max_num_inbound_peers}\"/" $DAEMON_HOME/config/config.toml

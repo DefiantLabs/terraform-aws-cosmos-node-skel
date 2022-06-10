@@ -121,7 +121,6 @@ variable "prometheus" {
   description = "prometheus"
 }
 
-# Sentry Vars
 variable "instance_type" {
   type        = string
   description = "The EC2 instance type used for the application"

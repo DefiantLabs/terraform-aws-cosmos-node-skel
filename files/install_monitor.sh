@@ -1,7 +1,7 @@
 export valoper="val"
 export node="acc"
 
-# Install Monitoring tools on Sentry
+# Install Monitoring tools
 # Prometheus
 wget https://github.com/prometheus/prometheus/releases/download/v2.36.0/prometheus-2.36.0.linux-amd64.tar.gz
 tar -zxvf prometheus-2.36.0.linux-amd64.tar.gz

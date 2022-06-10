@@ -39,7 +39,7 @@ resource "aws_key_pair" "node" {
 
 resource "aws_security_group" "shared_application_security_group" {
   name_prefix = "application_sg"
-  description = "Allow ssh between sentry and validator"
+  description = "Allow ssh between in local security group"
 
   vpc_id = var.vpc_id
   ingress {
@@ -130,7 +130,6 @@ resource "aws_s3_bucket" "conf_bucket" {
   #checkov:skip=CKV_AWS_18
   #checkov:skip=CKV_AWS_21
   #checkov:skip=CKV_AWS_52
-  bucket_prefix = "sentry"
 }
 
 resource "aws_s3_bucket_server_side_encryption_configuration" "conf_bucket" {
