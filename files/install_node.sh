@@ -77,13 +77,13 @@ if ${node_use_snapshot} ; then
   ${node_snapshot_code}
 fi
 
-${node_genesis}
+${node_genesis_command}
 sed -i "s/^moniker *=.*/moniker = \"${moniker}\"/" $DAEMON_HOME/config/config.toml
 sed -i "/^external_address = .*/ s//external_address = \"$(curl -s ifconfig.me):26656\"/" $DAEMON_HOME/config/config.toml
 sed -i "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"${minimum-gas-prices}\"/" $DAEMON_HOME/config/app.toml
 sed -i "s/^chain-id *=.*/chain-id = \"$CHAIN_ID\"/" $DAEMON_HOME/config/client.toml
 
-${dasel_commands}
+${extra_commands}
 
 # Setup Service
 tee -a /etc/systemd/system/cosmovisor.service<<EOF

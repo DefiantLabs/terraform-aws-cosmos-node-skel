@@ -43,9 +43,9 @@ variable "node_source" {
   description = "node_source"
 }
 
-variable "node_genesis" {
+variable "node_genesis_command" {
   type        = string
-  description = "node_genesis"
+  description = "node_genesis_command"
 }
 
 
@@ -60,9 +60,9 @@ variable "node_snapshot_code" {
 }
 
 
-variable "dasel_commands" {
+variable "extra_commands" {
   type        = string
-  description = "dasel_commands"
+  description = "extra_commands"
 }
 
 variable "key_pair" {
