@@ -30,25 +30,7 @@ data "aws_ami" "ubuntu" {
   }
 }
 
-module "vpc" {
-  source  = "terraform-aws-modules/vpc/aws"
-  version = "v3.14.0"
 
-  name = var.vpc_name
-  cidr = var.vpc_cidr
-
-  azs             = var.vpc_azs
-  private_subnets = var.vpc_private_subnets
-  public_subnets  = var.vpc_public_subnets
-
-  enable_nat_gateway = var.vpc_enable_nat_gateway
-  #   enable_vpn_gateway = true
-
-  tags = {
-    Terraform   = "true"
-    Environment = "dev"
-  }
-}
 
 resource "aws_key_pair" "node" {
   key_name   = "node"
@@ -59,7 +41,7 @@ resource "aws_security_group" "shared_application_security_group" {
   name_prefix = "application_sg"
   description = "Allow ssh between sentry and validator"
 
-  vpc_id = module.vpc.vpc_id
+  vpc_id = var.vpc_id
   ingress {
     from_port = 22
     to_port   = 22
@@ -109,7 +91,7 @@ resource "aws_s3_object" "install_monitor" {
   key    = "install_monitor.sh"
   content_base64 = base64encode(
     templatefile("${path.module}/files/install_monitor.sh", {
-      node_denom             = var.node_denom
+      node_denom = var.node_denom
     })
   )
   etag = filemd5("${path.module}/files/install_monitor.sh")
@@ -193,7 +175,7 @@ resource "aws_security_group" "application_security_group" {
   name_prefix = "application_sg"
   description = "Allow ssh, http ingress"
 
-  vpc_id = module.vpc.vpc_id
+  vpc_id = var.vpc_id
   ingress {
     from_port   = 26656
     to_port     = 26656
@@ -222,7 +204,7 @@ resource "aws_instance" "application_instance" {
   ami = "ami-01f18be4e32df20e2"
   # ami           = data.aws_ami.ubuntu.id
   key_name      = aws_key_pair.node.key_name
-  subnet_id     = module.vpc.public_subnets[0]
+  subnet_id     = var.subnet_id
   private_ip    = "10.0.101.11"
   instance_type = var.instance_type
   vpc_security_group_ids = [
@@ -243,7 +225,6 @@ resource "aws_instance" "application_instance" {
     volume_type = var.instance_root_storage_type
     volume_size = var.instance_root_storage_size
     iops        = var.instance_root_storage_iops
-    throughput  = 125
   }
 
   user_data = templatefile("${path.module}/files/application-cloud-config.yml", {
@@ -258,6 +239,6 @@ resource "aws_instance" "application_instance" {
   # Don't create instance untill network has internet.
   tags = {
     Name    = "${var.instance_name}"
-    GATEWAY = module.vpc.natgw_ids[0]
+    GATEWAY = var.natgw_id
   }
 }
