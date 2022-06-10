@@ -67,8 +67,6 @@ resource "aws_s3_object" "install_node" {
       node_genesis_command = var.node_genesis_command
       node_use_snapshot    = var.node_use_snapshot
       node_snapshot_code   = var.node_snapshot_code
-      minimum-gas-prices   = var.minimum-gas-prices
-      moniker              = var.moniker
       extra_commands       = var.extra_commands
 
     })

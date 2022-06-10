@@ -1,13 +1,3 @@
-variable "moniker" {
-  type        = string
-  description = "moniker"
-}
-
-variable "minimum-gas-prices" {
-  type        = string
-  description = "minimum-gas-prices"
-}
-
 variable "node_network" {
   type        = string
   description = "node_network"

@@ -13,7 +13,6 @@ export NETWORK=${node_network}
 export VERSION=${node_version}
 export CHAIN_ID=${node_chain_id}
 export DENOM=${node_denom}
-export GAS=${minimum-gas-prices}
 
 EOF
 chmod a+x /etc/profile.d/chain.sh
@@ -78,11 +77,6 @@ if ${node_use_snapshot} ; then
 fi
 
 ${node_genesis_command}
-sed -i "s/^moniker *=.*/moniker = \"${moniker}\"/" $DAEMON_HOME/config/config.toml
-sed -i "/^external_address = .*/ s//external_address = \"$(curl -s ifconfig.me):26656\"/" $DAEMON_HOME/config/config.toml
-sed -i "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"${minimum-gas-prices}\"/" $DAEMON_HOME/config/app.toml
-sed -i "s/^chain-id *=.*/chain-id = \"$CHAIN_ID\"/" $DAEMON_HOME/config/client.toml
-
 ${extra_commands}
 
 # Setup Service

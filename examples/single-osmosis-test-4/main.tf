@@ -12,8 +12,8 @@ module "vpc" {
   enable_nat_gateway = true
 
   tags = {
-    Terraform   = "true"
-    Environment = "dev"
+    Terraform = "true"
+
   }
 }
 
@@ -40,12 +40,10 @@ module "osmosis_test4" {
   node_source          = "https://github.com/osmosis-labs/osmosis.git"
   node_binary          = "osmosisd"
   node_dir             = "~/.osmosisd"
-  moniker              = "dltest"
   node_network         = "osmo-test-4"
   node_version         = "v9.0.0"
   node_chain_id        = "osmo-test-4"
   node_denom           = "osmo"
-  minimum-gas-prices   = "0.025uosmo"
   node_genesis_command = "curl -o - -L  https://github.com/osmosis-labs/networks/raw/main/osmo-test-4/genesis.tar.bz2 | tar -xj -C $DAEMON_HOME/config/"
 
   # Enable to build from snapshot.
@@ -58,17 +56,23 @@ module "osmosis_test4" {
 
   # Extra commands to customize your node.
   extra_commands = <<EOF
+    dasel put string -f $DAEMON_HOME/config/client.toml -p toml "chain-id" $CHAIN_ID
+
     dasel put string -f $DAEMON_HOME/config/app.toml -p toml "pruning" custom
     dasel put string -f $DAEMON_HOME/config/app.toml -p toml "pruning-keep-recent" 100
     dasel put string -f $DAEMON_HOME/config/app.toml -p toml "pruning-keep-every" 0
     dasel put string -f $DAEMON_HOME/config/app.toml -p toml "pruning-interval" 10
+    dasel put string -f $DAEMON_HOME/config/app.toml -p toml "minimum-gas-prices" 0.025uosmo
     dasel put string -f $DAEMON_HOME/config/app.toml -p toml ".api.enable" true
-    dasel put string -f $DAEMON_HOME/config/app.toml -p toml ".api.address" tcp://0.0.0.0:1318
+    dasel put string -f $DAEMON_HOME/config/app.toml -p toml ".api.address" tcp://0.0.0.0:1317
     dasel put string -f $DAEMON_HOME/config/app.toml -p toml ".api.swagger" true
     dasel put string -f $DAEMON_HOME/config/app.toml -p toml ".grpc.enable" true
     dasel put string -f $DAEMON_HOME/config/app.toml -p toml ".grpc.address" 0.0.0.0:9090
 
+
+    dasel put string -f $DAEMON_HOME/config/config.toml -p toml "moniker" dltest1
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".rpc.laddr" tcp://0.0.0.0:26657
+    dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.external_address" $(curl -s ifconfig.me):26656
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.pex" true
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.laddr" tcp://0.0.0.0:26656
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.seeds" 0f9a9c694c46bd28ad9ad6126e923993fc6c56b1@137.184.181.105:26656
