@@ -38,56 +38,14 @@ variable "node_denom" {
   description = "node_denom"
 }
 
-variable "node_seeds" {
-  type        = string
-  description = "node_seeds"
-}
-
 variable "node_source" {
   type        = string
   description = "node_source"
 }
 
-variable "node_peers" {
-  type        = string
-  description = "node_peers"
-}
-
 variable "node_genesis" {
   type        = string
   description = "node_genesis"
-}
-
-
-variable "pruning" {
-  type        = string
-  description = "pruning"
-}
-
-variable "pruning-keep-recent" {
-  type        = string
-  description = "pruning-keep-recent"
-}
-
-variable "pruning-keep-every" {
-  type        = string
-  description = "pruning-keep-every"
-}
-
-variable "pruning-interval" {
-  type        = string
-  description = "pruning-interval"
-}
-
-variable "max_num_inbound_peers" {
-  type        = string
-  description = "max_num_inbound_peers"
-}
-
-
-variable "max_num_outbound_peers" {
-  type        = string
-  description = "max_num_outbound_peers"
 }
 
 
@@ -101,24 +59,15 @@ variable "node_snapshot_code" {
   description = "node_snapshot_code"
 }
 
+
+variable "dasel_commands" {
+  type        = string
+  description = "dasel_commands"
+}
+
 variable "key_pair" {
   type        = string
   description = "key_pair"
-}
-
-variable "pex" {
-  type        = string
-  description = "pex"
-}
-
-variable "addr_book_strict" {
-  type        = string
-  description = "addr_book_strict"
-}
-
-variable "prometheus" {
-  type        = string
-  description = "prometheus"
 }
 
 variable "instance_type" {

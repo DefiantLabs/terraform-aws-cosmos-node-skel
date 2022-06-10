@@ -57,29 +57,19 @@ resource "aws_s3_object" "install_node" {
   key    = "install_node.sh"
   content_base64 = base64encode(
     templatefile("${path.module}/files/install_node.sh", {
-      node_network           = var.node_network
-      node_binary            = var.node_binary
-      node_source            = var.node_source
-      node_dir               = var.node_dir
-      node_version           = var.node_version
-      node_chain_id          = var.node_chain_id
-      node_peers             = var.node_peers
-      node_seeds             = var.node_seeds
-      node_genesis           = var.node_genesis
-      node_denom             = var.node_denom
-      node_use_snapshot      = var.node_use_snapshot
-      node_snapshot_code     = var.node_snapshot_code
-      minimum-gas-prices     = var.minimum-gas-prices
-      moniker                = var.moniker
-      pruning                = var.pruning
-      pruning-keep-recent    = var.pruning-keep-recent
-      pruning-keep-every     = var.pruning-keep-every
-      pruning-interval       = var.pruning-interval
-      pex                    = var.pex
-      addr_book_strict       = var.addr_book_strict
-      prometheus             = var.prometheus
-      max_num_inbound_peers  = var.max_num_inbound_peers
-      max_num_outbound_peers = var.max_num_outbound_peers
+      node_network       = var.node_network
+      node_binary        = var.node_binary
+      node_source        = var.node_source
+      node_dir           = var.node_dir
+      node_version       = var.node_version
+      node_chain_id      = var.node_chain_id
+      node_denom         = var.node_denom
+      node_genesis       = var.node_genesis
+      node_use_snapshot  = var.node_use_snapshot
+      node_snapshot_code = var.node_snapshot_code
+      minimum-gas-prices = var.minimum-gas-prices
+      moniker            = var.moniker
+      dasel_commands     = var.dasel_commands
 
     })
   )
@@ -178,6 +168,32 @@ resource "aws_security_group" "application_security_group" {
   ingress {
     from_port   = 26656
     to_port     = 26656
+    cidr_blocks = ["0.0.0.0/0"]
+    protocol    = "tcp"
+  }
+  ingress {
+    from_port   = 26657
+    to_port     = 26657
+    cidr_blocks = ["0.0.0.0/0"]
+    protocol    = "tcp"
+  }
+  ingress {
+    from_port   = 9090
+    to_port     = 9090
+    cidr_blocks = ["0.0.0.0/0"]
+    protocol    = "tcp"
+  }
+
+  ingress {
+    from_port   = 9091
+    to_port     = 9091
+    cidr_blocks = ["0.0.0.0/0"]
+    protocol    = "tcp"
+  }
+
+  ingress {
+    from_port   = 1317
+    to_port     = 1317
     cidr_blocks = ["0.0.0.0/0"]
     protocol    = "tcp"
   }

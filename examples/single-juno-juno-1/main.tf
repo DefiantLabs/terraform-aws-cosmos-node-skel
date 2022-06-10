@@ -66,4 +66,3 @@ module "juno_uni3" {
   instance_root_storage_size = "20"
 
 }
-

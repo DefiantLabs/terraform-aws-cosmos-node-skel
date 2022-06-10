@@ -37,6 +37,13 @@ cd update-golang
 . /etc/profile.d/golang_path.sh
 cd ..
 
+# Install dasel to modify toml files.
+RELEASE="https://github.com/TomWright/dasel/releases/download/v1.24.3/dasel_linux_amd64"
+wget $RELEASE
+chmod 755 dasel_linux_amd64
+mv dasel_linux_amd64 /usr/bin/dasel
+
+
 # Setup cosmovisor
 git clone https://github.com/cosmos/cosmos-sdk.git
 cd cosmos-sdk
@@ -73,19 +80,10 @@ fi
 ${node_genesis}
 sed -i "s/^moniker *=.*/moniker = \"${moniker}\"/" $DAEMON_HOME/config/config.toml
 sed -i "/^external_address = .*/ s//external_address = \"$(curl -s ifconfig.me):26656\"/" $DAEMON_HOME/config/config.toml
-sed -i "s/^max_num_inbound_peers *=.*/max_num_inbound_peers = \"${max_num_inbound_peers}\"/" $DAEMON_HOME/config/config.toml
-sed -i "s/^max_num_outbound_peers *=.*/max_num_outbound_peers = \"${max_num_outbound_peers}\"/" $DAEMON_HOME/config/config.toml
 sed -i "s/^minimum-gas-prices *=.*/minimum-gas-prices = \"${minimum-gas-prices}\"/" $DAEMON_HOME/config/app.toml
-sed -i "s/^pruning *=.*/pruning = \"${pruning}\"/" $DAEMON_HOME/config/app.toml
-sed -i "s/^pruning-keep-recent *=.*/pruning-keep-recent = \"${pruning-keep-recent}\"/" $DAEMON_HOME/config/app.toml
-sed -i "s/^pruning-keep-every *=.*/pruning-keep-every = \"${pruning-keep-every}\"/" $DAEMON_HOME/config/app.toml
-sed -i "s/^pruning-interval *=.*/pruning-interval = \"${pruning-interval}\"/" $DAEMON_HOME/config/app.toml
 sed -i "s/^chain-id *=.*/chain-id = \"$CHAIN_ID\"/" $DAEMON_HOME/config/client.toml
-sed -i "s/^pex *=.*/pex = \"${pex}\"/" $DAEMON_HOME/config/config.toml
-sed -i "s/^addr_book_strict *=.*/addr_book_strict = \"${addr_book_strict}\"/" $DAEMON_HOME/config/config.toml
-sed -i "s/^persistent_peers *=.*/persistent_peers = \"$(${node_peers})\"/" $DAEMON_HOME/config/config.toml
-sed -i "s/^seeds *=.*/seeds = \"$(${node_seeds})\"/" $DAEMON_HOME/config/config.toml
-sed -i "s/^prometheus *=.*/prometheus = \"${prometheus}\"/" $DAEMON_HOME/config/config.toml
+
+${dasel_commands}
 
 # Setup Service
 tee -a /etc/systemd/system/cosmovisor.service<<EOF
