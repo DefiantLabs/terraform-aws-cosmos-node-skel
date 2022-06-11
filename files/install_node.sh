@@ -10,7 +10,7 @@ cat > /etc/profile.d/chain.sh << EOF
 export DAEMON_HOME=${node_dir}
 export DAEMON_NAME=${node_binary}
 export NETWORK=${node_network}
-export VERSION=${node_version}
+export NODE_VERSION=${node_version}
 export CHAIN_ID=${node_chain_id}
 export DENOM=${node_denom}
 
@@ -57,12 +57,13 @@ cd ..
 git clone ${node_source}
 cd $(basename ${node_source} | cut -d "." -f1)
 git fetch
-git checkout $VERSION
+git checkout $NODE_VERSION
 make install
 cd ..
 
 # Copy binary to cosmovisor
 mkdir -p $DAEMON_HOME/cosmovisor/genesis/bin
+mkdir -p $DAEMON_HOME/cosmovisor/upgrades
 cp $HOME/go/bin/${node_binary} $DAEMON_HOME/cosmovisor/genesis/bin
 
 ${node_binary} init "default" --chain-id $CHAIN_ID
@@ -87,7 +88,7 @@ After=network-online.target
 
 [Service]
 User=root
-ExecStart=$HOME/go/bin/cosmovisor run start
+ExecStart=$HOME/go/bin/cosmovisor run start --x-crisis-skip-assert-invariants
 Restart=always
 RestartSec=3
 LimitNOFILE=4096
