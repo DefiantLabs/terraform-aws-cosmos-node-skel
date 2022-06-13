@@ -35,7 +35,7 @@ resource "aws_key_pair" "signer" {
 }
 
 
-resource "aws_s3_object" "install_node" {
+resource "aws_s3_object" "install_signer" {
   bucket = aws_s3_bucket.conf_bucket.bucket
   key    = "install_signer.sh"
   content_base64 = base64encode(

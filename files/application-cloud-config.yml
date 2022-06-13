@@ -20,12 +20,12 @@ packages:
 - net-tools
 - gcc
 - git
+- liblz4-tool
+- aria2
 
 runcmd:
 - |
     #!/bin/bash
     aws s3 sync s3://${conf_bucket} /root/
     chmod 755 /root/*.sh
-    pwd
-    ls
-    ./root/install_node.sh
+    # ./root/install_node.sh
