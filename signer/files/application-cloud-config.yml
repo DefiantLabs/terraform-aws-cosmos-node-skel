@@ -28,4 +28,4 @@ runcmd:
     chmod 755 /root/*.sh
     pwd
     ls
-    ./root/install_node.sh
+    ./root/install_signer.sh

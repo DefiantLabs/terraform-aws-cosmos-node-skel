@@ -115,10 +115,10 @@ variable "vpc_id" {
   type        = string
 }
 
-variable "natgw_id" {
-  description = "natgw_ids"
-  type        = string
-}
+# variable "natgw_id" {
+#   description = "natgw_ids"
+#   type        = string
+# }
 
 variable "subnet_id" {
   description = "public_subnet_id"
@@ -129,4 +129,10 @@ variable "vpc_security_group_ids" {
   description = "vpc_security_group_ids"
   type        = list(any)
   default     = []
+}
+
+
+variable "bech_prefix" {
+  description = "bech_prefix"
+  type        = string
 }

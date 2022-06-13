@@ -52,7 +52,6 @@ module "cosmoshub_thetatestnet001" {
     aws_security_group.node.id
   ]
   subnet_id = module.vpc.public_subnets[0]
-  natgw_id  = module.vpc.natgw_ids[0]
 
   key_pair = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCrTO9qkF76HhTUTZcEUV8c+p+oyfelTNqqK1hupvz7L/yX1I8Q8NGMRdrmIdRRj8JlAD5qughXVPCDj4HvTD1pLOQNV6E9CxPznOlb3ogQmdVmNvl/gyG8ySUPxldVnbBXZgChdi8xFjjzlHeNy+gIbbxHwsMS4k/Kk0N4s0dtEo2Hxz3VHpafzvpzhRWP0mstgPNWhyNlbwSh7ojx4zYug2mrKd560fcMP8fEx1RgZ5pLrSlLL8NHaJzc4EpiAFbqwS8SFM+HyABWWnjZhm7acdweboE9oahjMa/7UhUTgIN44E/fb1DLiAWARHru9/yaOan4uxzkGmHhtLa/xLjdrq5N9J3TlGGURJGtcHAY80MLPJ6IiYpCIM7JpYHn8eLrH8kbeSDQp6+Y3NtILBMxVxjkZ2UjJDMRQv9iprH5qc0uMP6IILm9x2tdmwpxl+emyDq22rE9JcvSqY4VSVYTpiIwKdJd9P/npAudCJjLCYOjSOUZ41Npb9cYqaYCfPGAu/jNmcoMy0F3wWVqHLDN7ngR+HO4sJiPXY+vcQU8PoMHuYm99jEh0U+TKk6S+KlGGwTAm002LVnKnkCRZSGXgnCJmj0dYiHaL2EhWnzS2TRsTyWhTGO/VOMwCvM+1MuHYMGJexeTPuTkLcbgUgWWtFBWslOn6oONqDPz95SBHQ== node"
 
@@ -74,6 +73,7 @@ module "cosmoshub_thetatestnet001" {
   node_version         = "v6.0.0"
   node_chain_id        = "theta-testnet-001"
   node_denom           = "atom"
+  bech_prefix           = "cosmos"
   node_genesis_command = "curl -s -o - -L  https://github.com/cosmos/testnets/raw/master/v7-theta/public-testnet/genesis.json.gz | gunzip > $DAEMON_HOME/config/genesis.json"
 
   # Enable to build from snapshot.

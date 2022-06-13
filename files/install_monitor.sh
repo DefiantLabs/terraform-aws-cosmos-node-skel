@@ -1,5 +1,5 @@
-export valoper="val"
-export node="acc"
+export nodeval="nodeval"
+export nodeacc="nodeacc"
 
 # Install Monitoring tools
 # Prometheus
@@ -9,8 +9,8 @@ cd prometheus-2.36.0.linux-amd64
 mv prometheus /usr/bin/
 mkdir -p /etc/prometheus/
 cp /root/prometheus.yml /etc/prometheus//prometheus.yml
-sed -i "s/valoper/$valoper/" /etc/prometheus/prometheus.yml
-sed -i "s/node/$node/" /etc/prometheus/prometheus.yml
+sed -i "s/nodeval/$nodeval/" /etc/prometheus/prometheus.yml
+sed -i "s/nodeacc/$nodeacc/" /etc/prometheus/prometheus.yml
 cd ..
 
 # Setup Service
@@ -79,7 +79,7 @@ After=network-online.target
 
 [Service]
 User=root
-ExecStart=cosmos-exporter --denom u${node_denom} --denom-coefficient 1000000 --bech-prefix ${node_denom}
+ExecStart=cosmos-exporter --denom u${node_denom} --denom-coefficient 1000000 --bech-prefix ${bech_prefix}
 Restart=always
 RestartSec=3
 LimitNOFILE=4096

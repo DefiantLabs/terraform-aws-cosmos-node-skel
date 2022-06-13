@@ -189,3 +189,13 @@ junod tx slashing unjail \
 ```
 
 You can check the status by looking at the mintscan TX details.
+
+
+## How to edit validator details  
+```
+gaiad tx staking edit-validator cosmosvaloper1qwc7a4kgys2zfswu7a4f5egc0rssep6tdlxu2z --fees 5000uatom --from cosmos1qwc7a4kgys2zfswu7a4f5egc0rssep6tgtjfx3 --chain-id theta-testnet-001 --website http://defiantlabs.net
+```
+
+
+## todo
+add bechprefix for cosmos-exporer

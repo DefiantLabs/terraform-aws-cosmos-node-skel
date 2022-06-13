@@ -29,71 +29,22 @@ data "aws_ami" "ubuntu" {
 
 
 
-resource "aws_key_pair" "node" {
-  key_name_prefix   = "node"
+resource "aws_key_pair" "signer" {
+  key_name_prefix   = "signer"
   public_key = var.key_pair
 }
 
 
 resource "aws_s3_object" "install_node" {
   bucket = aws_s3_bucket.conf_bucket.bucket
-  key    = "install_node.sh"
+  key    = "install_signer.sh"
   content_base64 = base64encode(
-    templatefile("${path.module}/files/install_node.sh", {
+    templatefile("${path.module}/files/install_signer.sh", {
       node_network         = var.node_network
-      node_binary          = var.node_binary
-      node_source          = var.node_source
-      node_dir             = var.node_dir
-      node_version         = var.node_version
-      node_chain_id        = var.node_chain_id
-      node_denom           = var.node_denom
-      node_genesis_command = var.node_genesis_command
-      node_use_snapshot    = var.node_use_snapshot
-      node_snapshot_code   = var.node_snapshot_code
-      extra_commands       = var.extra_commands
 
     })
   )
-  etag = filemd5("${path.module}/files/install_node.sh")
-}
-
-resource "aws_s3_object" "install_monitor" {
-  bucket = aws_s3_bucket.conf_bucket.bucket
-  key    = "install_monitor.sh"
-  content_base64 = base64encode(
-    templatefile("${path.module}/files/install_monitor.sh", {
-      node_denom = var.node_denom
-      bech_prefix           = var.bech_prefix
-    })
-  )
-  etag = filemd5("${path.module}/files/install_monitor.sh")
-}
-
-resource "aws_s3_object" "prometheus_conf" {
-  bucket = aws_s3_bucket.conf_bucket.bucket
-  key    = "prometheus.yml"
-  content_base64 = base64encode(
-    file("${path.module}/files/prometheus.yml")
-  )
-  etag = filemd5("${path.module}/files/prometheus.yml")
-}
-
-resource "aws_s3_object" "dashboard" {
-  bucket = aws_s3_bucket.conf_bucket.bucket
-  key    = "dashboard.yml"
-  content_base64 = base64encode(
-    file("${path.module}/files/dashboard.yml")
-  )
-  etag = filemd5("${path.module}/files/dashboard.yml")
-}
-
-resource "aws_s3_object" "datasource" {
-  bucket = aws_s3_bucket.conf_bucket.bucket
-  key    = "datasource.yml"
-  content_base64 = base64encode(
-    file("${path.module}/files/datasource.yml")
-  )
-  etag = filemd5("${path.module}/files/datasource.yml")
+  etag = filemd5("${path.module}/files/install_signer.sh")
 }
 
 
@@ -146,20 +97,12 @@ resource "aws_instance" "application_instance" {
   #checkov:skip=CKV_AWS_8
   ami = "ami-01f18be4e32df20e2"
   # ami           = data.aws_ami.ubuntu.id
-  key_name               = aws_key_pair.node.key_name
+  key_name               = aws_key_pair.signer.key_name
   subnet_id              = var.subnet_id
   instance_type          = var.instance_type
   vpc_security_group_ids = var.vpc_security_group_ids
 
   iam_instance_profile        = aws_iam_instance_profile.application_instance_profile.name
-  associate_public_ip_address = true
-
-  ebs_block_device {
-    device_name = "/dev/xvdf"
-    volume_type = var.instance_ebs_storage_type
-    volume_size = var.instance_ebs_storage_size
-    iops        = var.instance_ebs_storage_iops
-  }
 
   root_block_device {
     volume_type = var.instance_root_storage_type
@@ -179,6 +122,6 @@ resource "aws_instance" "application_instance" {
   # Don't create instance untill network has internet.
   tags = {
     Name    = "${var.instance_name}"
-    # GATEWAY = var.natgw_id
+    GATEWAY = var.natgw_id
   }
 }
