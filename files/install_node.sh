@@ -105,3 +105,25 @@ EOF
 sudo -S systemctl daemon-reload
 sudo -S systemctl enable cosmovisor
 sudo -S systemctl start cosmovisor
+
+
+# Setup Service
+tee -a /etc/systemd/system/tmkms.service<<EOF
+[Unit]
+Description=tmkms
+After=network-online.target
+
+[Service]
+User=root
+ExecStart=$HOME/.cargo/bin/tmkms start -c -c $HOME/.kujira/kms/tmkms.toml
+Restart=always
+RestartSec=3
+LimitNOFILE=65535
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo -S systemctl daemon-reload
+sudo -S systemctl enable tmkms
+sudo -S systemctl start tmkms

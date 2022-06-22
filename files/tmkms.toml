@@ -1,0 +1,16 @@
+[[chain]]
+id = "harpoon-4"
+key_format = { type = "bech32", account_key_prefix = "kujirapub", consensus_key_prefix = "kujiravalconspub" }
+state_file = "/root/.kujira/kms/state/kujira-harpoon-4-consensus.json"
+
+[[providers.softsign]]
+chain_ids = ["harpoon-4"]
+key_type = "consensus"
+path = "/root/.kujira/kms/secrets/kujira-harpoon-4-consensus.key"
+
+[[validator]]
+chain_id = "harpoon-4"
+addr = "tcp://127.0.0.1:26659"
+secret_key = "/root/.kujira/kms/secrets/kms-identity.key"
+protocol_version = "v0.34"
+reconnect = true

@@ -3,13 +3,11 @@ module "vpc" {
   version = "v3.14.0"
 
   name = "node-vpc"
-  cidr = "10.0.0.0/16"
+  cidr = "10.1.0.0/16"
 
   azs             = ["us-east-1a"]
-  private_subnets = ["10.0.1.0/24"]
-  public_subnets  = ["10.0.101.0/24"]
+  public_subnets  = ["10.1.101.0/24"]
 
-  enable_nat_gateway = true
 
   tags = {
     Terraform = "true"
@@ -93,9 +91,9 @@ module "juno_uni3" {
     dasel put string -f $DAEMON_HOME/config/app.toml -p toml "pruning-keep-every" 0
     dasel put string -f $DAEMON_HOME/config/app.toml -p toml "pruning-interval" 10
     dasel put string -f $DAEMON_HOME/config/app.toml -p toml "minimum-gas-prices" 0.025ujunox
-    dasel put string -f $DAEMON_HOME/config/app.toml -p toml ".api.enable" true
+    dasel put string -f $DAEMON_HOME/config/app.toml -p toml ".api.enable" false
     dasel put string -f $DAEMON_HOME/config/app.toml -p toml ".api.address" tcp://0.0.0.0:1317
-    dasel put string -f $DAEMON_HOME/config/app.toml -p toml ".api.swagger" true
+    dasel put string -f $DAEMON_HOME/config/app.toml -p toml ".api.swagger" false
     dasel put string -f $DAEMON_HOME/config/app.toml -p toml ".grpc.enable" true
     dasel put string -f $DAEMON_HOME/config/app.toml -p toml ".grpc.address" 0.0.0.0:9090
 
@@ -105,11 +103,12 @@ module "juno_uni3" {
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.external_address" $(curl -s ifconfig.me):26656
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.pex" true
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.laddr" tcp://0.0.0.0:26656
+    dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.seeds" fd1e3f9baf1922f81bfd9754ddbc4269dbf08264@uni.seed.rhinostake.com:26656
 
-    dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.persistent_peers" ddaa333eba3d8ac43249dcd59451aad28f190d70@162.55.128.249:36656,f79ce2fab55e56b408d76ddcbc1c82c1a90e315b@172.31.44.248:26656
+    dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.persistent_peers" ec41af656b3450050ae27559b66b877373c44861@65.21.122.47:26656,2ae09360327854c79971d07245764626f43fdfc5@38.242.247.46:36656,d3bb05d61ebe83958a5ea2af2abf5d8fce620038@116.202.143.90:26656,c583f7bbfee00ca0ff0208663fe2d07014415ec9@185.213.27.145:36656
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.addr_book_strict" false
-    dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.max_num_inbound_peers" 80
-    dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.max_num_outbound_peers" 80
+    dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.max_num_inbound_peers" 20
+    dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.max_num_outbound_peers" 20
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".instrumentation.prometheus" true
 
   EOF
