@@ -78,3 +78,8 @@ variable "vpc_security_group_ids" {
   type        = list(any)
   default     = []
 }
+
+variable "sentry_keypair" {
+  description = "sentry_keypair"
+  type        = string
+}

@@ -1,3 +1,12 @@
+locals {
+  # Change these to a trusted pubic SSH Identity.
+  sentry_key_pair = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCrTO9qkF76HhTUTZcEUV8c+p+oyfelTNqqK1hupvz7L/yX1I8Q8NGMRdrmIdRRj8JlAD5qughXVPCDj4HvTD1pLOQNV6E9CxPznOlb3ogQmdVmNvl/gyG8ySUPxldVnbBXZgChdi8xFjjzlHeNy+gIbbxHwsMS4k/Kk0N4s0dtEo2Hxz3VHpafzvpzhRWP0mstgPNWhyNlbwSh7ojx4zYug2mrKd560fcMP8fEx1RgZ5pLrSlLL8NHaJzc4EpiAFbqwS8SFM+HyABWWnjZhm7acdweboE9oahjMa/7UhUTgIN44E/fb1DLiAWARHru9/yaOan4uxzkGmHhtLa/xLjdrq5N9J3TlGGURJGtcHAY80MLPJ6IiYpCIM7JpYHn8eLrH8kbeSDQp6+Y3NtILBMxVxjkZ2UjJDMRQv9iprH5qc0uMP6IILm9x2tdmwpxl+emyDq22rE9JcvSqY4VSVYTpiIwKdJd9P/npAudCJjLCYOjSOUZ41Npb9cYqaYCfPGAu/jNmcoMy0F3wWVqHLDN7ngR+HO4sJiPXY+vcQU8PoMHuYm99jEh0U+TKk6S+KlGGwTAm002LVnKnkCRZSGXgnCJmj0dYiHaL2EhWnzS2TRsTyWhTGO/VOMwCvM+1MuHYMGJexeTPuTkLcbgUgWWtFBWslOn6oONqDPz95SBHQ== node"
+  signer_key_pair = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCrTO9qkF76HhTUTZcEUV8c+p+oyfelTNqqK1hupvz7L/yX1I8Q8NGMRdrmIdRRj8JlAD5qughXVPCDj4HvTD1pLOQNV6E9CxPznOlb3ogQmdVmNvl/gyG8ySUPxldVnbBXZgChdi8xFjjzlHeNy+gIbbxHwsMS4k/Kk0N4s0dtEo2Hxz3VHpafzvpzhRWP0mstgPNWhyNlbwSh7ojx4zYug2mrKd560fcMP8fEx1RgZ5pLrSlLL8NHaJzc4EpiAFbqwS8SFM+HyABWWnjZhm7acdweboE9oahjMa/7UhUTgIN44E/fb1DLiAWARHru9/yaOan4uxzkGmHhtLa/xLjdrq5N9J3TlGGURJGtcHAY80MLPJ6IiYpCIM7JpYHn8eLrH8kbeSDQp6+Y3NtILBMxVxjkZ2UjJDMRQv9iprH5qc0uMP6IILm9x2tdmwpxl+emyDq22rE9JcvSqY4VSVYTpiIwKdJd9P/npAudCJjLCYOjSOUZ41Npb9cYqaYCfPGAu/jNmcoMy0F3wWVqHLDN7ngR+HO4sJiPXY+vcQU8PoMHuYm99jEh0U+TKk6S+KlGGwTAm002LVnKnkCRZSGXgnCJmj0dYiHaL2EhWnzS2TRsTyWhTGO/VOMwCvM+1MuHYMGJexeTPuTkLcbgUgWWtFBWslOn6oONqDPz95SBHQ== node"
+  sentry_instance_type = "t3.medium"
+  signer_instance_type = "t3.small"
+  moniker = "defiantlabs"
+}
+
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "v3.14.0"
@@ -19,9 +28,16 @@ module "vpc" {
 }
 
 resource "aws_security_group" "node" {
-  name        = "node_securitygroup"
+  name        = "node"
   description = "Security group for node"
   vpc_id      = module.vpc.vpc_id
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
   tags = {
     Name = "node_securitygroup"
@@ -29,15 +45,9 @@ resource "aws_security_group" "node" {
 }
 
 resource "aws_security_group" "remote_signer" {
-  name        = "remote_signer_securitygroup"
+  name        = "remote_signer"
   description = "Security group for remote_signer"
   vpc_id      = module.vpc.vpc_id
-  ingress {
-      from_port   = 2222
-      to_port     = 2222
-      protocol    = "tcp"
-      self = true
-    }
   
   egress {
     from_port   = 0
@@ -52,8 +62,8 @@ resource "aws_security_group" "remote_signer" {
 }
 
 
-resource "aws_security_group" "p2p_port" {
-  name        = "allow_public_p2p"
+resource "aws_security_group" "node_p2p_port" {
+  name        = "node_p2p_port"
   description = "Allow public to communicate over p2p"
   vpc_id      = module.vpc.vpc_id
 
@@ -64,17 +74,28 @@ resource "aws_security_group" "p2p_port" {
       cidr_blocks = ["0.0.0.0/0"]
     }
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+  tags = {
+    Name = "public_p2p"
   }
+}
+
+resource "aws_security_group" "signer_p2p_port" {
+  name        = "signer_p2p_port"
+  description = "Allow signers to communicate with each other p2p"
+  vpc_id      = module.vpc.vpc_id
+
+  ingress {
+      from_port   = 2222
+      to_port     = 2222
+      protocol    = "tcp"
+      self = true
+    }
 
   tags = {
     Name = "public_p2p"
   }
 }
+
 
 resource "aws_security_group" "private_validator_port" {
   name        = "allow_public"
@@ -88,33 +109,27 @@ resource "aws_security_group" "private_validator_port" {
       cidr_blocks = ["0.0.0.0/0"]
   }
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
   tags = {
     Name = "private_validator_port"
   }
 }
 
-module "kujira_harpoon4" {
+module "sentry_0" {
   source = "../../"
 
   vpc_id = module.vpc.vpc_id
   vpc_security_group_ids = [
     aws_security_group.node.id,
-    aws_security_group.p2p_port.id,
+    aws_security_group.node_p2p_port.id,
     aws_security_group.private_validator_port.id
   ]
   subnet_id = module.vpc.public_subnets[0]
+  private_ip = "10.1.101.10"
 
-  key_pair = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCrTO9qkF76HhTUTZcEUV8c+p+oyfelTNqqK1hupvz7L/yX1I8Q8NGMRdrmIdRRj8JlAD5qughXVPCDj4HvTD1pLOQNV6E9CxPznOlb3ogQmdVmNvl/gyG8ySUPxldVnbBXZgChdi8xFjjzlHeNy+gIbbxHwsMS4k/Kk0N4s0dtEo2Hxz3VHpafzvpzhRWP0mstgPNWhyNlbwSh7ojx4zYug2mrKd560fcMP8fEx1RgZ5pLrSlLL8NHaJzc4EpiAFbqwS8SFM+HyABWWnjZhm7acdweboE9oahjMa/7UhUTgIN44E/fb1DLiAWARHru9/yaOan4uxzkGmHhtLa/xLjdrq5N9J3TlGGURJGtcHAY80MLPJ6IiYpCIM7JpYHn8eLrH8kbeSDQp6+Y3NtILBMxVxjkZ2UjJDMRQv9iprH5qc0uMP6IILm9x2tdmwpxl+emyDq22rE9JcvSqY4VSVYTpiIwKdJd9P/npAudCJjLCYOjSOUZ41Npb9cYqaYCfPGAu/jNmcoMy0F3wWVqHLDN7ngR+HO4sJiPXY+vcQU8PoMHuYm99jEh0U+TKk6S+KlGGwTAm002LVnKnkCRZSGXgnCJmj0dYiHaL2EhWnzS2TRsTyWhTGO/VOMwCvM+1MuHYMGJexeTPuTkLcbgUgWWtFBWslOn6oONqDPz95SBHQ== node"
+  key_pair = local.sentry_key_pair
 
-  instance_type = "t3.medium"
-  instance_name = "Chain-Node"
+  instance_type = locals.sentry_instance_type
+  instance_name = "Kujira-harpoon-4-Chain-Node"
 
   instance_ebs_storage_type = "gp3"
   instance_ebs_storage_iops = "3000"
@@ -161,7 +176,7 @@ module "kujira_harpoon4" {
     dasel put string -f $DAEMON_HOME/config/app.toml -p toml ".grpc.address" 0.0.0.0:9090
     
 
-    dasel put string -f $DAEMON_HOME/config/config.toml -p toml "moniker" DefiantLabs
+    dasel put string -f $DAEMON_HOME/config/config.toml -p toml "moniker" ${locals.moniker}
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".rpc.laddr" tcp://0.0.0.0:26657
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.external_address" $(curl -s ifconfig.me):26656
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.pex" true
@@ -182,7 +197,8 @@ module "horcrux_0" {
 
   vpc_id = module.vpc.vpc_id
   vpc_security_group_ids = [
-    aws_security_group.remote_signer.id
+    aws_security_group.remote_signer.id,
+    aws_security_group.signer_p2p_port.id
   ]
   subnet_id = module.vpc.private_subnets[0]
   private_ip = "10.1.1.10"
@@ -190,10 +206,10 @@ module "horcrux_0" {
   peer_2_ip = "10.1.3.10"
   sentry_1_ip = "10.1.101.67"
 
-  key_pair = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCrTO9qkF76HhTUTZcEUV8c+p+oyfelTNqqK1hupvz7L/yX1I8Q8NGMRdrmIdRRj8JlAD5qughXVPCDj4HvTD1pLOQNV6E9CxPznOlb3ogQmdVmNvl/gyG8ySUPxldVnbBXZgChdi8xFjjzlHeNy+gIbbxHwsMS4k/Kk0N4s0dtEo2Hxz3VHpafzvpzhRWP0mstgPNWhyNlbwSh7ojx4zYug2mrKd560fcMP8fEx1RgZ5pLrSlLL8NHaJzc4EpiAFbqwS8SFM+HyABWWnjZhm7acdweboE9oahjMa/7UhUTgIN44E/fb1DLiAWARHru9/yaOan4uxzkGmHhtLa/xLjdrq5N9J3TlGGURJGtcHAY80MLPJ6IiYpCIM7JpYHn8eLrH8kbeSDQp6+Y3NtILBMxVxjkZ2UjJDMRQv9iprH5qc0uMP6IILm9x2tdmwpxl+emyDq22rE9JcvSqY4VSVYTpiIwKdJd9P/npAudCJjLCYOjSOUZ41Npb9cYqaYCfPGAu/jNmcoMy0F3wWVqHLDN7ngR+HO4sJiPXY+vcQU8PoMHuYm99jEh0U+TKk6S+KlGGwTAm002LVnKnkCRZSGXgnCJmj0dYiHaL2EhWnzS2TRsTyWhTGO/VOMwCvM+1MuHYMGJexeTPuTkLcbgUgWWtFBWslOn6oONqDPz95SBHQ== node"
+  key_pair = local.signer_key_pair
 
   instance_type = "t3.small"
-  instance_name = "horcrux_1"
+  instance_name = "Kujira-harpoon-4-horcrux_0"  
   natgw_id = module.vpc.natgw_ids[0]
   node_chain_id = "harpoon-4"
 
@@ -207,7 +223,8 @@ module "horcrux_1" {
 
   vpc_id = module.vpc.vpc_id
   vpc_security_group_ids = [
-    aws_security_group.remote_signer.id
+    aws_security_group.remote_signer.id,
+    aws_security_group.signer_p2p_port.id
   ]
   subnet_id = module.vpc.private_subnets[1]
   private_ip = "10.1.2.10"
@@ -215,10 +232,10 @@ module "horcrux_1" {
   peer_2_ip = "10.1.3.10"
   sentry_1_ip = "10.1.101.67"
 
-  key_pair = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCrTO9qkF76HhTUTZcEUV8c+p+oyfelTNqqK1hupvz7L/yX1I8Q8NGMRdrmIdRRj8JlAD5qughXVPCDj4HvTD1pLOQNV6E9CxPznOlb3ogQmdVmNvl/gyG8ySUPxldVnbBXZgChdi8xFjjzlHeNy+gIbbxHwsMS4k/Kk0N4s0dtEo2Hxz3VHpafzvpzhRWP0mstgPNWhyNlbwSh7ojx4zYug2mrKd560fcMP8fEx1RgZ5pLrSlLL8NHaJzc4EpiAFbqwS8SFM+HyABWWnjZhm7acdweboE9oahjMa/7UhUTgIN44E/fb1DLiAWARHru9/yaOan4uxzkGmHhtLa/xLjdrq5N9J3TlGGURJGtcHAY80MLPJ6IiYpCIM7JpYHn8eLrH8kbeSDQp6+Y3NtILBMxVxjkZ2UjJDMRQv9iprH5qc0uMP6IILm9x2tdmwpxl+emyDq22rE9JcvSqY4VSVYTpiIwKdJd9P/npAudCJjLCYOjSOUZ41Npb9cYqaYCfPGAu/jNmcoMy0F3wWVqHLDN7ngR+HO4sJiPXY+vcQU8PoMHuYm99jEh0U+TKk6S+KlGGwTAm002LVnKnkCRZSGXgnCJmj0dYiHaL2EhWnzS2TRsTyWhTGO/VOMwCvM+1MuHYMGJexeTPuTkLcbgUgWWtFBWslOn6oONqDPz95SBHQ== node"
+  key_pair = local.signer_key_pair
 
   instance_type = "t3.small"
-  instance_name = "horcrux_2"
+  instance_name = "Kujira-harpoon-4-horcrux_1"
   natgw_id = module.vpc.natgw_ids[0]
   node_chain_id = "harpoon-4"
 
@@ -232,7 +249,8 @@ module "horcrux_2" {
 
   vpc_id = module.vpc.vpc_id
   vpc_security_group_ids = [
-    aws_security_group.remote_signer.id
+    aws_security_group.remote_signer.id,
+    aws_security_group.signer_p2p_port.id
   ]
   subnet_id = module.vpc.private_subnets[2]
   private_ip = "10.1.3.10"
@@ -240,10 +258,10 @@ module "horcrux_2" {
   peer_2_ip = "10.1.2.10"
   sentry_1_ip = "10.1.101.67"
 
-  key_pair = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCrTO9qkF76HhTUTZcEUV8c+p+oyfelTNqqK1hupvz7L/yX1I8Q8NGMRdrmIdRRj8JlAD5qughXVPCDj4HvTD1pLOQNV6E9CxPznOlb3ogQmdVmNvl/gyG8ySUPxldVnbBXZgChdi8xFjjzlHeNy+gIbbxHwsMS4k/Kk0N4s0dtEo2Hxz3VHpafzvpzhRWP0mstgPNWhyNlbwSh7ojx4zYug2mrKd560fcMP8fEx1RgZ5pLrSlLL8NHaJzc4EpiAFbqwS8SFM+HyABWWnjZhm7acdweboE9oahjMa/7UhUTgIN44E/fb1DLiAWARHru9/yaOan4uxzkGmHhtLa/xLjdrq5N9J3TlGGURJGtcHAY80MLPJ6IiYpCIM7JpYHn8eLrH8kbeSDQp6+Y3NtILBMxVxjkZ2UjJDMRQv9iprH5qc0uMP6IILm9x2tdmwpxl+emyDq22rE9JcvSqY4VSVYTpiIwKdJd9P/npAudCJjLCYOjSOUZ41Npb9cYqaYCfPGAu/jNmcoMy0F3wWVqHLDN7ngR+HO4sJiPXY+vcQU8PoMHuYm99jEh0U+TKk6S+KlGGwTAm002LVnKnkCRZSGXgnCJmj0dYiHaL2EhWnzS2TRsTyWhTGO/VOMwCvM+1MuHYMGJexeTPuTkLcbgUgWWtFBWslOn6oONqDPz95SBHQ== node"
+  key_pair = local.signer_key_pair
 
-  instance_type = "t3.small"
-  instance_name = "horcrux_3"
+  instance_type = locals.signer_instance_type
+  instance_name = "Kujira-harpoon-4-horcrux_2"
   natgw_id = module.vpc.natgw_ids[0]
   node_chain_id = "harpoon-4"
 
