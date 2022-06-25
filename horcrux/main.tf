@@ -40,7 +40,11 @@ resource "aws_s3_object" "install_signer" {
   key    = "install_signer.sh"
   content_base64 = base64encode(
     templatefile("${path.module}/files/install_signer.sh", {
-      node_network         = var.node_network
+      node_chain_id         = var.node_chain_id
+      private_ip = var.private_ip
+      peer_1_ip = var.peer_1_ip
+      peer_2_ip = var.peer_2_ip
+      sentry_1_ip = var.sentry_1_ip
 
     })
   )
@@ -101,6 +105,7 @@ resource "aws_instance" "application_instance" {
   subnet_id              = var.subnet_id
   instance_type          = var.instance_type
   vpc_security_group_ids = var.vpc_security_group_ids
+  private_ip = var.private_ip
 
   iam_instance_profile        = aws_iam_instance_profile.application_instance_profile.name
 

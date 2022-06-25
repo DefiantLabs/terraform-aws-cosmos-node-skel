@@ -1,7 +1,30 @@
-variable "node_network" {
+variable "node_chain_id" {
   type        = string
-  description = "node_network"
+  description = "node_chain_id"
 }
+
+variable "private_ip" {
+  type        = string
+  description = "private_ip"
+}
+
+variable "peer_1_ip" {
+  type        = string
+  description = "peer_1_ip"
+}
+
+
+variable "peer_2_ip" {
+  type        = string
+  description = "peer_2_ip"
+}
+
+
+variable "sentry_1_ip" {
+  type        = string
+  description = "sentry_1_ip"
+}
+
 
 
 variable "key_pair" {
