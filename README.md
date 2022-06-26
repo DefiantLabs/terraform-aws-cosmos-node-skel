@@ -107,7 +107,7 @@ alias ssm="ssm-session $@"
 ```
 ssml
 ssm i-095fced5ad3bd5adb
-sudo su - root
+sudo su - ec2-user
 ```
 
 ## Connect to your instance by SSH  
@@ -120,7 +120,7 @@ ssh -i private.key ubuntu@ip
 ```
 
 # Automated Installer
-Shortly after you connect, the instacne will run `/root/install_node.sh`.  You can watch the progress by doing `tail -f /root/install_node.log`. Keep in mind this may take a while depending on the snapshot you used.
+Shortly after you connect, the instacne will run `/home/ec2-user/install_node.sh`.  You can watch the progress by doing `tail -f /home/ec2-user/install_node.log`. Keep in mind this may take a while depending on the snapshot you used.
 ```
 ./install_node.sh
 ```
@@ -185,7 +185,7 @@ junod tx slashing unjail \
     --from=operator \
     --chain-id=uni-3\
     --gas-prices=0.025ujunox \
-    --home=/root/.juno
+    --home=/home/ec2-user/.juno
 ```
 
 You can check the status by looking at the mintscan TX details.

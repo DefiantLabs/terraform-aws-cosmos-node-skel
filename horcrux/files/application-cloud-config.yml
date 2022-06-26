@@ -24,8 +24,8 @@ packages:
 runcmd:
 - |
     #!/bin/bash
-    aws s3 sync s3://${conf_bucket} /root/
-    chmod 755 /root/*.sh
+    aws s3 sync s3://${conf_bucket} /home/ec2-user/
+    chmod 755 /home/ec2-user/*.sh
     pwd
     ls
-    ./root/install_signer.sh
+    ./home/ec2-user/install_signer.sh

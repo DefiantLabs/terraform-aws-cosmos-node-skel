@@ -87,7 +87,7 @@ Description=cosmovisor
 After=network-online.target
 
 [Service]
-User=root
+User=ec2-user
 ExecStart=$HOME/go/bin/cosmovisor run start --x-crisis-skip-assert-invariants
 Restart=always
 RestartSec=3
@@ -114,7 +114,7 @@ Description=tmkms
 After=network-online.target
 
 [Service]
-User=root
+User=ec2-user
 ExecStart=$HOME/.cargo/bin/tmkms start -c -c $HOME/.kujira/kms/tmkms.toml
 Restart=always
 RestartSec=3

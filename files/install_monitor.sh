@@ -8,7 +8,7 @@ tar -zxvf prometheus-2.36.0.linux-amd64.tar.gz
 cd prometheus-2.36.0.linux-amd64
 mv prometheus /usr/bin/
 mkdir -p /etc/prometheus/
-cp /root/prometheus.yml /etc/prometheus//prometheus.yml
+cp /home/ec2-user/prometheus.yml /etc/prometheus//prometheus.yml
 sed -i "s/nodeval/$nodeval/" /etc/prometheus/prometheus.yml
 sed -i "s/nodeacc/$nodeacc/" /etc/prometheus/prometheus.yml
 cd ..
@@ -20,7 +20,7 @@ Description=prometheus
 After=network-online.target
 
 [Service]
-User=root
+User=ec2-user
 ExecStart=prometheus --web.listen-address=0.0.0.0:9094 --config.file=/etc/prometheus/prometheus.yml
 Restart=always
 RestartSec=3
@@ -50,7 +50,7 @@ Description=node_exporter
 After=network-online.target
 
 [Service]
-User=root
+User=ec2-user
 ExecStart=node_exporter --web.listen-address=":9105"
 Restart=always
 RestartSec=3
@@ -78,7 +78,7 @@ Description=cosmos-exporter
 After=network-online.target
 
 [Service]
-User=root
+User=ec2-user
 ExecStart=cosmos-exporter --denom u${node_denom} --denom-coefficient 1000000 --bech-prefix ${bech_prefix}
 Restart=always
 RestartSec=3
@@ -104,8 +104,8 @@ sudo apt-get install grafana
 # Install Default Dashboards
 mkdir -p /etc/grafana/provisioning/dashboards/
 mkdir -p /etc/grafana/provisioning/datasources/
-cp /root/dashboard.yml /etc/grafana/provisioning/dashboards/
-cp /root/datasource.yml /etc/grafana/provisioning/datasources/
+cp /home/ec2-user/dashboard.yml /etc/grafana/provisioning/dashboards/
+cp /home/ec2-user/datasource.yml /etc/grafana/provisioning/datasources/
 __url='https://raw.githubusercontent.com/kj89/cosmos_node_monitoring/master/grafana/dashboards/cosmos_validator.json'
 __file='/etc/grafana/provisioning/dashboards/cosmos_validator.json'
 wget -qcO - $__url | jq '.title = "cosmos_validator"' >$__file

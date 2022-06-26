@@ -15,7 +15,7 @@ Description=horcrux MPC Signer node
 After=network-online.target
 
 [Service]
-User=root
+User=ec2-user
 ExecStart=/usr/bin/horcrux cosigner start
 Restart=on-failure
 RestartSec=3
