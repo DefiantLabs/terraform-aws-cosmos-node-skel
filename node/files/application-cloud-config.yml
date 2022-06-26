@@ -26,6 +26,6 @@ packages:
 runcmd:
 - |
     #!/bin/bash
-    aws s3 sync s3://${conf_bucket} /home/ec2-user/
-    chmod 755 /home/ec2-user/*.sh
-    # ./home/ec2-user/install_node.sh
+    aws s3 sync s3://${conf_bucket} /home/ubuntu/
+    chmod 755 /home/ubuntu/*.sh
+    # ./home/ubuntu/install_node.sh

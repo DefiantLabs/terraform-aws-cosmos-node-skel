@@ -136,3 +136,9 @@ variable "bech_prefix" {
   description = "bech_prefix"
   type        = string
 }
+
+
+variable "private_ip" {
+  description = "private_ip"
+  type        = string
+}

@@ -12,7 +12,7 @@ module "vpc" {
   # azs             = ["us-east-1a"]
   # public_subnets  = ["10.168.0.0/25"]
   # private_subnets = ["10.168.129.0/25"]
-  
+
 
   enable_nat_gateway = true
 
@@ -79,7 +79,7 @@ module "sentry0" {
   node_version         = "v6.0.0"
   node_chain_id        = "juno-1"
   node_denom           = "juno"
-  bech_prefix           = "juno"
+  bech_prefix          = "juno"
   node_genesis_command = "curl -s -o $DAEMON_HOME/config/genesis.json https://raw.githubusercontent.com/CosmosContracts/mainnet/main/juno-1/genesis.json"
 
   # Enable to build from snapshot.
@@ -152,7 +152,7 @@ module "sentry1" {
   node_version         = "v6.0.0"
   node_chain_id        = "juno-1"
   node_denom           = "juno"
-  bech_prefix           = "juno"
+  bech_prefix          = "juno"
   node_genesis_command = "curl -s -o $DAEMON_HOME/config/genesis.json https://raw.githubusercontent.com/CosmosContracts/mainnet/main/juno-1/genesis.json"
 
   # Enable to build from snapshot.
@@ -225,7 +225,7 @@ module "sentry2" {
   node_version         = "v6.0.0"
   node_chain_id        = "juno-1"
   node_denom           = "juno"
-  bech_prefix           = "juno"
+  bech_prefix          = "juno"
   node_genesis_command = "curl -s -o $DAEMON_HOME/config/genesis.json https://raw.githubusercontent.com/CosmosContracts/mainnet/main/juno-1/genesis.json"
 
   # Enable to build from snapshot.
@@ -288,8 +288,8 @@ module "signer0" {
   instance_root_storage_iops = "3000"
   instance_root_storage_size = "20"
 
-  node_network         = "mainnet"
-  natgw_id  = module.vpc.natgw_ids[0]
+  node_network = "mainnet"
+  natgw_id     = module.vpc.natgw_ids[0]
 
 }
 
@@ -313,8 +313,8 @@ module "signer1" {
   instance_root_storage_iops = "3000"
   instance_root_storage_size = "20"
 
-  node_network         = "mainnet"
-  natgw_id  = module.vpc.natgw_ids[1]
+  node_network = "mainnet"
+  natgw_id     = module.vpc.natgw_ids[1]
 
 }
 
@@ -337,7 +337,7 @@ module "signer2" {
   instance_root_storage_iops = "3000"
   instance_root_storage_size = "20"
 
-  node_network         = "mainnet"
-  natgw_id  = module.vpc.natgw_ids[2]
+  node_network = "mainnet"
+  natgw_id     = module.vpc.natgw_ids[2]
 
 }

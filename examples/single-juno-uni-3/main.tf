@@ -5,8 +5,8 @@ module "vpc" {
   name = "node-vpc"
   cidr = "10.1.0.0/16"
 
-  azs             = ["us-east-1a"]
-  public_subnets  = ["10.1.101.0/24"]
+  azs            = ["us-east-1a"]
+  public_subnets = ["10.1.101.0/24"]
 
 
   tags = {
@@ -71,7 +71,7 @@ module "juno_uni3" {
   node_version         = "v6.0.0"
   node_chain_id        = "uni-3"
   node_denom           = "junox"
-  bech_prefix           = "juno"
+  bech_prefix          = "juno"
   node_genesis_command = "curl -s -o $DAEMON_HOME/config/genesis.json https://raw.githubusercontent.com/CosmosContracts/testnets/main/uni-3/genesis.json"
 
   # Enable to build from snapshot.

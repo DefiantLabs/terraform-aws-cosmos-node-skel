@@ -2,11 +2,12 @@
 exec > >(tee install_node.log)
 
 # HOME is not set in cloud-config.
-export HOME=`getent passwd "$(whoami)" | cut -d: -f6`
+# export ROOT_DIR=`getent passwd "$(whoami)" | cut -d: -f6`
+export HOME=/home/ubuntu
 cd $HOME
 
 # Add env vars to profile
-cat > /etc/profile.d/chain.sh << EOF
+sudo tee /etc/profile.d/chain.sh<<EOF
 export DAEMON_HOME=${node_dir}
 export DAEMON_NAME=${node_binary}
 export NETWORK=${node_network}
@@ -15,24 +16,26 @@ export CHAIN_ID=${node_chain_id}
 export DENOM=${node_denom}
 
 EOF
-chmod a+x /etc/profile.d/chain.sh
+sudo chmod a+x /etc/profile.d/chain.sh
 
 . /etc/profile.d/chain.sh
 
 #mount EBS
 mkdir -p $DAEMON_HOME
 export disk=$(lsblk -J | jq -r '.blockdevices[]  | select(.mountpoint == null) | select(index("children") | not)' | jq -r '.name')
-echo "/dev/$disk $DAEMON_HOME xfs defaults 0 0" >> /etc/fstab
-mkfs -t xfs /dev/$disk
-mount -a
+sudo sh -c "echo /dev/$disk $DAEMON_HOME xfs defaults 0 0 >> /etc/fstab"
+sudo mkfs -t xfs /dev/$disk
+sudo mount -a
+sudo chown -R ubuntu $DAEMON_HOME /home/ubuntu/
+
 
 # Install pre-requisites
-apt-get install make build-essential chrony -y
+sudo apt-get install make build-essential chrony -y
 
 # Install Go
 git clone https://github.com/udhos/update-golang
 cd update-golang
-./update-golang.sh
+sudo ./update-golang.sh
 . /etc/profile.d/golang_path.sh
 cd ..
 
@@ -40,7 +43,7 @@ cd ..
 RELEASE="https://github.com/TomWright/dasel/releases/download/v1.24.3/dasel_linux_amd64"
 wget $RELEASE
 chmod 755 dasel_linux_amd64
-mv dasel_linux_amd64 /usr/bin/dasel
+sudo mv dasel_linux_amd64 /usr/bin/dasel
 
 
 # Setup cosmovisor
@@ -81,13 +84,13 @@ ${node_genesis_command}
 ${extra_commands}
 
 # Setup Service
-tee -a /etc/systemd/system/cosmovisor.service<<EOF
+sudo tee /etc/systemd/system/cosmovisor.service<<EOF
 [Unit]
 Description=cosmovisor
 After=network-online.target
 
 [Service]
-User=ec2-user
+User=ubuntu
 ExecStart=$HOME/go/bin/cosmovisor run start --x-crisis-skip-assert-invariants
 Restart=always
 RestartSec=3
@@ -105,25 +108,3 @@ EOF
 sudo -S systemctl daemon-reload
 sudo -S systemctl enable cosmovisor
 sudo -S systemctl start cosmovisor
-
-
-# Setup Service
-tee -a /etc/systemd/system/tmkms.service<<EOF
-[Unit]
-Description=tmkms
-After=network-online.target
-
-[Service]
-User=ec2-user
-ExecStart=$HOME/.cargo/bin/tmkms start -c -c $HOME/.kujira/kms/tmkms.toml
-Restart=always
-RestartSec=3
-LimitNOFILE=65535
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-sudo -S systemctl daemon-reload
-sudo -S systemctl enable tmkms
-sudo -S systemctl start tmkms

@@ -150,6 +150,7 @@ resource "aws_instance" "application_instance" {
   subnet_id              = var.subnet_id
   instance_type          = var.instance_type
   vpc_security_group_ids = var.vpc_security_group_ids
+  private_ip = var.private_ip
 
   iam_instance_profile        = aws_iam_instance_profile.application_instance_profile.name
   associate_public_ip_address = true

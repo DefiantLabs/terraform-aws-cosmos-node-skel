@@ -73,7 +73,7 @@ module "cosmoshub_thetatestnet001" {
   node_version         = "v6.0.0"
   node_chain_id        = "theta-testnet-001"
   node_denom           = "atom"
-  bech_prefix           = "cosmos"
+  bech_prefix          = "cosmos"
   node_genesis_command = "curl -s -o - -L  https://github.com/cosmos/testnets/raw/master/v7-theta/public-testnet/genesis.json.gz | gunzip > $DAEMON_HOME/config/genesis.json"
 
   # Enable to build from snapshot.

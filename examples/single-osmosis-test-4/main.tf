@@ -73,7 +73,7 @@ module "osmosis_test4" {
   node_version         = "v9.0.0"
   node_chain_id        = "osmo-test-4"
   node_denom           = "osmo"
-  bech_prefix           = "osmo"
+  bech_prefix          = "osmo"
   node_genesis_command = "curl -o - -L  https://github.com/osmosis-labs/networks/raw/main/osmo-test-4/genesis.tar.bz2 | tar -xj -C $DAEMON_HOME/config/"
 
   # Enable to build from snapshot.

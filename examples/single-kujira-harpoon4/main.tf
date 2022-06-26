@@ -73,7 +73,7 @@ module "kujira_harpoon4" {
   node_version         = "v0.4.0"
   node_chain_id        = "harpoon-4"
   node_denom           = "kuji"
-  bech_prefix           = "kuji"
+  bech_prefix          = "kuji"
   node_genesis_command = "curl -s -o $DAEMON_HOME/config/genesis.json https://raw.githubusercontent.com/Team-Kujira/networks/master/testnet/harpoon-4.json"
 
   # Enable to build from snapshot.

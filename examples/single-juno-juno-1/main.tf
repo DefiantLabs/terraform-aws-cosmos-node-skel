@@ -73,7 +73,7 @@ module "juno_juno1" {
   node_version         = "v6.0.0"
   node_chain_id        = "juno-1"
   node_denom           = "juno"
-  bech_prefix           = "juno"
+  bech_prefix          = "juno"
   node_genesis_command = "curl -s -o $DAEMON_HOME/config/genesis.json https://raw.githubusercontent.com/CosmosContracts/mainnet/main/juno-1/genesis.json"
 
   # Enable to build from snapshot.

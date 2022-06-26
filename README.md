@@ -1,6 +1,6 @@
 
 # terraform-aws-cosmos-node-skel
-A terraform module to deploy a cosmos node in amazon web services. Check out the examples.  
+A terraform module to deploy a cosmos node in amazon web services. Check out the examples.
 
 ## AWS Setup
 Create IAM User Credentials for dev identity with permission to assume role to terraform_admin
@@ -60,7 +60,7 @@ aws-vault exec dev_identity -- sts get-caller-identity
 avsh terraform_admin
 ```
 
-## Deploy a pre-built example.  
+## Deploy a pre-built example.
 In the examples folder are pre-built configs for common validator setups.  For example to build a single public juno testnet validator you would.
 
 ```
@@ -70,8 +70,8 @@ terragrunt plan
 terragrunt apply
 ```
 
-## Customize your own validator.  
-Choose a existing example, copy it to a new name, customize the options.  
+## Customize your own validator.
+Choose a existing example, copy it to a new name, customize the options.
 
 ```
 cp examples/single-juno-uni-3 examples/my-custom-validator
@@ -93,9 +93,9 @@ terragrunt apply
 
 
 ## Connect to your instance by SSM
-There are many ways to connect to an instance in AWS.  A common way is to use SSM.  
-[session-manager-working-with-install-plugin](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html)  
-[aws-ssm-tools](https://github.com/mludvig/aws-ssm-tools)  
+There are many ways to connect to an instance in AWS.  A common way is to use SSM.
+[session-manager-working-with-install-plugin](https://docs.aws.amazon.com/systems-manager/latest/userguide/session-manager-working-with-install-plugin.html)
+[aws-ssm-tools](https://github.com/mludvig/aws-ssm-tools)
 
 
 ```
@@ -107,20 +107,20 @@ alias ssm="ssm-session $@"
 ```
 ssml
 ssm i-095fced5ad3bd5adb
-sudo su - ec2-user
+sudo su - ubuntu
 ```
 
-## Connect to your instance by SSH  
-Instead of SSM, you can use SSH by doing the following:   
-- add port `22` to the ingress section of `resource "aws_security_group" "node"` in `main.tf`.   
-- update `key_pair` in `main.tf` with your public key  
+## Connect to your instance by SSH
+Instead of SSM, you can use SSH by doing the following:
+- add port `22` to the ingress section of `resource "aws_security_group" "node"` in `main.tf`.
+- update `key_pair` in `main.tf` with your public key
 - then execute the following command
 ```
 ssh -i private.key ubuntu@ip
 ```
 
 # Automated Installer
-Shortly after you connect, the instacne will run `/home/ec2-user/install_node.sh`.  You can watch the progress by doing `tail -f /home/ec2-user/install_node.log`. Keep in mind this may take a while depending on the snapshot you used.
+Shortly after you connect, the instacne will run `/home/ubuntu/install_node.sh`.  You can watch the progress by doing `tail -f /home/ubuntu/install_node.log`. Keep in mind this may take a while depending on the snapshot you used.
 ```
 ./install_node.sh
 ```
@@ -185,13 +185,13 @@ junod tx slashing unjail \
     --from=operator \
     --chain-id=uni-3\
     --gas-prices=0.025ujunox \
-    --home=/home/ec2-user/.juno
+    --home=/home/ubuntu/.juno
 ```
 
 You can check the status by looking at the mintscan TX details.
 
 
-## How to edit validator details  
+## How to edit validator details
 ```
 gaiad tx staking edit-validator cosmosvaloper1qwc7a4kgys2zfswu7a4f5egc0rssep6tdlxu2z --fees 5000uatom --from cosmos1qwc7a4kgys2zfswu7a4f5egc0rssep6tgtjfx3 --chain-id theta-testnet-001 --website http://defiantlabs.net
 ```

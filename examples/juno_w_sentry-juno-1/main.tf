@@ -73,7 +73,7 @@ module "sentry" {
   node_version         = "v6.0.0"
   node_chain_id        = "juno-1"
   node_denom           = "juno"
-  bech_prefix           = "juno"
+  bech_prefix          = "juno"
   node_genesis_command = "curl -s -o $DAEMON_HOME/config/genesis.json https://raw.githubusercontent.com/CosmosContracts/mainnet/main/juno-1/genesis.json"
 
   # Enable to build from snapshot.
@@ -143,7 +143,7 @@ module "validator" {
   instance_root_storage_type = "gp3"
   instance_root_storage_iops = "3000"
   instance_root_storage_size = "25"
-  
+
 
   node_source          = "https://github.com/CosmosContracts/juno.git"
   node_binary          = "junod"
@@ -152,7 +152,7 @@ module "validator" {
   node_version         = "v6.0.0"
   node_chain_id        = "juno-1"
   node_denom           = "juno"
-  bech_prefix           = "juno"
+  bech_prefix          = "juno"
   node_genesis_command = "curl -s -o $DAEMON_HOME/config/genesis.json https://raw.githubusercontent.com/CosmosContracts/mainnet/main/juno-1/genesis.json"
 
   # Enable to build from snapshot.
@@ -160,7 +160,7 @@ module "validator" {
   node_snapshot_code = <<EOF
       junod tendermint unsafe-reset-all
       LATEST=$(curl -s https://snapshots2.polkachu.com/snapshots/ | grep -oE 'juno/juno_.*.tar.lz4' | cut -f 1 -d '<' | head -1)
-      aria2c -o $DAEMON_HOME https://snapshots2.polkachu.com/snapshots/$LATEST 
+      aria2c -o $DAEMON_HOME https://snapshots2.polkachu.com/snapshots/$LATEST
       lz4 -c -d $LATEST | tar -x -C DAEMON_HOME
       # curl -o - -L https://snapshots2.polkachu.com/snapshots/$LATEST | lz4 -c -d - | tar -xv -C $DAEMON_HOME
       EOF

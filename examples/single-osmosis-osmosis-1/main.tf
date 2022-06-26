@@ -73,7 +73,7 @@ module "osmosis_osmosis1" {
   node_version         = "v9.0.0"
   node_chain_id        = "osmo-1"
   node_denom           = "osmo"
-  bech_prefix           = "osmo"
+  bech_prefix          = "osmo"
   node_genesis_command = "curl -s -o $DAEMON_HOME/config/genesis.json https://github.com/osmosis-labs/networks/blob/main/osmosis-1/genesis.json"
 
   # Enable to build from snapshot.
