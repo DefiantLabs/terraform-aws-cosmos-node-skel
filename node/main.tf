@@ -30,8 +30,8 @@ data "aws_ami" "ubuntu" {
 
 
 resource "aws_key_pair" "node" {
-  key_name_prefix   = "node"
-  public_key = var.key_pair
+  key_name_prefix = "node"
+  public_key      = var.key_pair
 }
 
 
@@ -62,8 +62,8 @@ resource "aws_s3_object" "install_monitor" {
   key    = "install_monitor.sh"
   content_base64 = base64encode(
     templatefile("${path.module}/files/install_monitor.sh", {
-      node_denom = var.node_denom
-      bech_prefix           = var.bech_prefix
+      node_denom  = var.node_denom
+      bech_prefix = var.bech_prefix
     })
   )
   etag = filemd5("${path.module}/files/install_monitor.sh")
@@ -150,7 +150,7 @@ resource "aws_instance" "application_instance" {
   subnet_id              = var.subnet_id
   instance_type          = var.instance_type
   vpc_security_group_ids = var.vpc_security_group_ids
-  private_ip = var.private_ip
+  private_ip             = var.private_ip
 
   iam_instance_profile        = aws_iam_instance_profile.application_instance_profile.name
   associate_public_ip_address = true
@@ -179,7 +179,7 @@ resource "aws_instance" "application_instance" {
   }
   # Don't create instance untill network has internet.
   tags = {
-    Name    = "${var.instance_name}"
+    Name = "${var.instance_name}"
     # GATEWAY = var.natgw_id
   }
 }
