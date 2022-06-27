@@ -196,6 +196,7 @@ module "sentry_0" {
     aws_security_group.private_validator_port.id
   ]
   subnet_id  = module.vpc.public_subnets[0]
+  az = module.vpc.azs[0]
   private_ip = "10.1.129.10"
 
   key_pair = local.sentry_key_pair
@@ -348,11 +349,12 @@ module "monitor_0" {
 
   vpc_id = module.vpc.vpc_id
   vpc_security_group_ids = [
-    aws_security_group.monitor.id,
-    aws_security_group.grafana_port.id
+    aws_security_group.monitor.id
   ]
-  subnet_id   = module.vpc.private_subnets[2]
-  private_ip  = "10.1.3.10"
+  subnet_id   = module.vpc.private_subnets[0]
+  node_denom           = "kuji"
+  bech_prefix          = "kuji"
+  private_ip  = "10.1.1.11"
   peer_1_ip   = "10.1.1.10"
   peer_2_ip   = "10.1.2.10"
   sentry_1_ip = "10.1.129.10"

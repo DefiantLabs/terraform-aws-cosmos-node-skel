@@ -142,3 +142,8 @@ variable "private_ip" {
   description = "private_ip"
   type        = string
 }
+
+variable "az" {
+  description = "az"
+  type        = string
+}

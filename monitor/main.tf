@@ -6,6 +6,50 @@ data "aws_region" "current" {}
 
 data "aws_caller_identity" "current" {}
 
+resource "aws_s3_object" "install_monitor" {
+  bucket = aws_s3_bucket.conf_bucket.bucket
+  key    = "install_monitor.sh"
+  content_base64 = base64encode(
+    templatefile("${path.module}/files/install_monitor.sh", {
+      node_denom  = var.node_denom
+      bech_prefix = var.bech_prefix
+      node_chain_id = var.node_chain_id
+      private_ip    = var.private_ip
+      peer_1_ip     = var.peer_1_ip
+      peer_2_ip     = var.peer_2_ip
+      sentry_1_ip   = var.sentry_1_ip
+    })
+  )
+  etag = filemd5("${path.module}/files/install_monitor.sh")
+}
+
+resource "aws_s3_object" "prometheus_conf" {
+  bucket = aws_s3_bucket.conf_bucket.bucket
+  key    = "prometheus.yml"
+  content_base64 = base64encode(
+    file("${path.module}/files/prometheus.yml")
+  )
+  etag = filemd5("${path.module}/files/prometheus.yml")
+}
+
+resource "aws_s3_object" "dashboard" {
+  bucket = aws_s3_bucket.conf_bucket.bucket
+  key    = "dashboard.yml"
+  content_base64 = base64encode(
+    file("${path.module}/files/dashboard.yml")
+  )
+  etag = filemd5("${path.module}/files/dashboard.yml")
+}
+
+resource "aws_s3_object" "datasource" {
+  bucket = aws_s3_bucket.conf_bucket.bucket
+  key    = "datasource.yml"
+  content_base64 = base64encode(
+    file("${path.module}/files/datasource.yml")
+  )
+  etag = filemd5("${path.module}/files/datasource.yml")
+}
+
 
 data "aws_ami" "ubuntu" {
   most_recent = true
@@ -32,23 +76,6 @@ data "aws_ami" "ubuntu" {
 resource "aws_key_pair" "monitor" {
   key_name_prefix = "monitor"
   public_key      = var.key_pair
-}
-
-
-resource "aws_s3_object" "install_monitor" {
-  bucket = aws_s3_bucket.conf_bucket.bucket
-  key    = "install_monitor.sh"
-  content_base64 = base64encode(
-    templatefile("${path.module}/files/install_monitor.sh", {
-      node_chain_id = var.node_chain_id
-      private_ip    = var.private_ip
-      peer_1_ip     = var.peer_1_ip
-      peer_2_ip     = var.peer_2_ip
-      sentry_1_ip   = var.sentry_1_ip
-
-    })
-  )
-  etag = filemd5("${path.module}/files/install_monitor.sh")
 }
 
 
@@ -110,8 +137,8 @@ resource "aws_iam_instance_profile" "application_instance_profile" {
 resource "aws_instance" "application_instance" {
   #checkov:skip=CKV_AWS_79
   #checkov:skip=CKV_AWS_8
-  ami = "ami-01f18be4e32df20e2"
-  # ami           = data.aws_ami.ubuntu.id
+  # ami = "ami-01f18be4e32df20e2"
+  ami           = data.aws_ami.ubuntu.id
   key_name               = aws_key_pair.monitor.key_name
   subnet_id              = var.subnet_id
   instance_type          = var.instance_type
@@ -119,6 +146,7 @@ resource "aws_instance" "application_instance" {
   private_ip             = var.private_ip
   metadata_options {
     http_tokens = "required"
+    http_endpoint = "enabled"
   }  
 
   iam_instance_profile = aws_iam_instance_profile.application_instance_profile.name

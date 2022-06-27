@@ -6,6 +6,7 @@ data "aws_region" "current" {}
 
 data "aws_caller_identity" "current" {}
 
+
 data "aws_ami" "ubuntu" {
   most_recent = true
   owners      = ["099720109477"]
@@ -55,46 +56,6 @@ resource "aws_s3_object" "install_node" {
   )
   etag = filemd5("${path.module}/files/install_node.sh")
 }
-
-resource "aws_s3_object" "install_monitor" {
-  bucket = aws_s3_bucket.conf_bucket.bucket
-  key    = "install_monitor.sh"
-  content_base64 = base64encode(
-    templatefile("${path.module}/files/install_monitor.sh", {
-      node_denom  = var.node_denom
-      bech_prefix = var.bech_prefix
-    })
-  )
-  etag = filemd5("${path.module}/files/install_monitor.sh")
-}
-
-resource "aws_s3_object" "prometheus_conf" {
-  bucket = aws_s3_bucket.conf_bucket.bucket
-  key    = "prometheus.yml"
-  content_base64 = base64encode(
-    file("${path.module}/files/prometheus.yml")
-  )
-  etag = filemd5("${path.module}/files/prometheus.yml")
-}
-
-resource "aws_s3_object" "dashboard" {
-  bucket = aws_s3_bucket.conf_bucket.bucket
-  key    = "dashboard.yml"
-  content_base64 = base64encode(
-    file("${path.module}/files/dashboard.yml")
-  )
-  etag = filemd5("${path.module}/files/dashboard.yml")
-}
-
-resource "aws_s3_object" "datasource" {
-  bucket = aws_s3_bucket.conf_bucket.bucket
-  key    = "datasource.yml"
-  content_base64 = base64encode(
-    file("${path.module}/files/datasource.yml")
-  )
-  etag = filemd5("${path.module}/files/datasource.yml")
-}
-
 
 #Application resources
 #tfsec:ignore:aws-s3-enable-bucket-logging
@@ -149,6 +110,30 @@ resource "aws_iam_instance_profile" "application_instance_profile" {
   role        = aws_iam_role.application_instance_role.name
 }
 
+resource "aws_eip" "application_instance" {
+  vpc = true
+
+  instance                  = aws_instance.application_instance.id
+  associate_with_private_ip = aws_instance.application_instance.private_ip
+  tags = {
+    Name = "Node-application-instance"
+  }
+}
+
+resource "aws_volume_attachment" "ebs_att" {
+  device_name = "/dev/xvdf"
+  volume_id   = aws_ebs_volume.application_instance.id
+  instance_id = aws_instance.application_instance.id
+}
+
+resource "aws_ebs_volume" "application_instance" {
+  size              = var.instance_ebs_storage_size
+  availability_zone = var.az
+  encrypted = true
+  iops = var.instance_ebs_storage_iops
+  type = var.instance_ebs_storage_type
+}
+
 resource "aws_instance" "application_instance" {
   #checkov:skip=CKV_AWS_79
   #checkov:skip=CKV_AWS_8
@@ -161,18 +146,10 @@ resource "aws_instance" "application_instance" {
   private_ip             = var.private_ip
   metadata_options {
     http_tokens = "required"
+    http_endpoint = "enabled"
   }
 
   iam_instance_profile        = aws_iam_instance_profile.application_instance_profile.name
-  associate_public_ip_address = true
-
-  ebs_block_device {
-    device_name = "/dev/xvdf"
-    volume_type = var.instance_ebs_storage_type
-    volume_size = var.instance_ebs_storage_size
-    iops        = var.instance_ebs_storage_iops
-    encrypted   = true
-  }
 
   root_block_device {
     volume_type = var.instance_root_storage_type

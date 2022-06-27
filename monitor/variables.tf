@@ -78,3 +78,13 @@ variable "vpc_security_group_ids" {
   type        = list(any)
   default     = []
 }
+
+variable "node_denom" {
+  type        = string
+  description = "node_denom"
+}
+
+variable "bech_prefix" {
+  type        = string
+  description = "bech_prefix"
+}

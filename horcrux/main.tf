@@ -110,8 +110,8 @@ resource "aws_iam_instance_profile" "application_instance_profile" {
 resource "aws_instance" "application_instance" {
   #checkov:skip=CKV_AWS_79
   #checkov:skip=CKV_AWS_8
-  ami = "ami-01f18be4e32df20e2"
-  # ami           = data.aws_ami.ubuntu.id
+  # ami = "ami-01f18be4e32df20e2"
+  ami           = data.aws_ami.ubuntu.id
   key_name               = aws_key_pair.signer.key_name
   subnet_id              = var.subnet_id
   instance_type          = var.instance_type
@@ -119,6 +119,7 @@ resource "aws_instance" "application_instance" {
   private_ip             = var.private_ip
   metadata_options {
     http_tokens = "required"
+    http_endpoint = "enabled"
   }
 
   iam_instance_profile = aws_iam_instance_profile.application_instance_profile.name
