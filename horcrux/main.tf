@@ -61,16 +61,16 @@ resource "aws_s3_bucket" "conf_bucket" {
 }
 
 
-resource "aws_s3_bucket_public_access_block" "conf_bucket" { 
-  bucket = aws_s3_bucket.conf_bucket.id
-  block_public_acls = true
-  block_public_policy = true 
-  ignore_public_acls = true
+resource "aws_s3_bucket_public_access_block" "conf_bucket" {
+  bucket                  = aws_s3_bucket.conf_bucket.id
+  block_public_acls       = true
+  block_public_policy     = true
+  ignore_public_acls      = true
   restrict_public_buckets = true
 }
 
 #tfsec:ignore:aws-s3-encryption-customer-key
-resource "aws_s3_bucket_server_side_encryption_configuration" "conf_bucket" { 
+resource "aws_s3_bucket_server_side_encryption_configuration" "conf_bucket" {
   bucket = aws_s3_bucket.conf_bucket.bucket
 
   rule {
@@ -119,7 +119,7 @@ resource "aws_instance" "application_instance" {
   private_ip             = var.private_ip
   metadata_options {
     http_tokens = "required"
-  }  
+  }
 
   iam_instance_profile = aws_iam_instance_profile.application_instance_profile.name
 
@@ -127,7 +127,7 @@ resource "aws_instance" "application_instance" {
     volume_type = var.instance_root_storage_type
     volume_size = var.instance_root_storage_size
     iops        = var.instance_root_storage_iops
-    encrypted = true
+    encrypted   = true
   }
 
   user_data = templatefile("${path.module}/files/application-cloud-config.yml", {

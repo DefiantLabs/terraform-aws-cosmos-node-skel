@@ -1,0 +1,29 @@
+#cloud-config
+ssh_genkeytypes: ecdsa
+disable_root: true
+disable_root_opts: no-port-forwarding,no-agent-forwarding,no-X11-forwarding
+repo_update: true
+repo_upgrade: all
+
+packages:
+- python-setuptools
+- python3-pip
+- collectd-core
+- postgresql-client
+- jq
+- curl
+- nfs-common
+- htop
+- awscli
+- ccze
+- atop
+- net-tools
+- gcc
+- git
+
+runcmd:
+- |
+    #!/bin/bash
+    aws s3 sync s3://${conf_bucket} /home/ubuntu/
+    chmod 755 /home/ubuntu/*.sh
+    # ./home/ubuntu/install_signer.sh

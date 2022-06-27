@@ -1,4 +1,4 @@
-files: ^examples/kujira-mainnet
+files: ^examples/kujira-kaiyo-1
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.2.0
