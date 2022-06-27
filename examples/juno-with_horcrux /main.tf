@@ -2,7 +2,7 @@ locals {
   # Change these to a trusted pubic SSH Identity.
   sentry_key_pair = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCrTO9qkF76HhTUTZcEUV8c+p+oyfelTNqqK1hupvz7L/yX1I8Q8NGMRdrmIdRRj8JlAD5qughXVPCDj4HvTD1pLOQNV6E9CxPznOlb3ogQmdVmNvl/gyG8ySUPxldVnbBXZgChdi8xFjjzlHeNy+gIbbxHwsMS4k/Kk0N4s0dtEo2Hxz3VHpafzvpzhRWP0mstgPNWhyNlbwSh7ojx4zYug2mrKd560fcMP8fEx1RgZ5pLrSlLL8NHaJzc4EpiAFbqwS8SFM+HyABWWnjZhm7acdweboE9oahjMa/7UhUTgIN44E/fb1DLiAWARHru9/yaOan4uxzkGmHhtLa/xLjdrq5N9J3TlGGURJGtcHAY80MLPJ6IiYpCIM7JpYHn8eLrH8kbeSDQp6+Y3NtILBMxVxjkZ2UjJDMRQv9iprH5qc0uMP6IILm9x2tdmwpxl+emyDq22rE9JcvSqY4VSVYTpiIwKdJd9P/npAudCJjLCYOjSOUZ41Npb9cYqaYCfPGAu/jNmcoMy0F3wWVqHLDN7ngR+HO4sJiPXY+vcQU8PoMHuYm99jEh0U+TKk6S+KlGGwTAm002LVnKnkCRZSGXgnCJmj0dYiHaL2EhWnzS2TRsTyWhTGO/VOMwCvM+1MuHYMGJexeTPuTkLcbgUgWWtFBWslOn6oONqDPz95SBHQ== node"
   signer_key_pair = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCrTO9qkF76HhTUTZcEUV8c+p+oyfelTNqqK1hupvz7L/yX1I8Q8NGMRdrmIdRRj8JlAD5qughXVPCDj4HvTD1pLOQNV6E9CxPznOlb3ogQmdVmNvl/gyG8ySUPxldVnbBXZgChdi8xFjjzlHeNy+gIbbxHwsMS4k/Kk0N4s0dtEo2Hxz3VHpafzvpzhRWP0mstgPNWhyNlbwSh7ojx4zYug2mrKd560fcMP8fEx1RgZ5pLrSlLL8NHaJzc4EpiAFbqwS8SFM+HyABWWnjZhm7acdweboE9oahjMa/7UhUTgIN44E/fb1DLiAWARHru9/yaOan4uxzkGmHhtLa/xLjdrq5N9J3TlGGURJGtcHAY80MLPJ6IiYpCIM7JpYHn8eLrH8kbeSDQp6+Y3NtILBMxVxjkZ2UjJDMRQv9iprH5qc0uMP6IILm9x2tdmwpxl+emyDq22rE9JcvSqY4VSVYTpiIwKdJd9P/npAudCJjLCYOjSOUZ41Npb9cYqaYCfPGAu/jNmcoMy0F3wWVqHLDN7ngR+HO4sJiPXY+vcQU8PoMHuYm99jEh0U+TKk6S+KlGGwTAm002LVnKnkCRZSGXgnCJmj0dYiHaL2EhWnzS2TRsTyWhTGO/VOMwCvM+1MuHYMGJexeTPuTkLcbgUgWWtFBWslOn6oONqDPz95SBHQ== node"
-  sentry_instance_type = "m5.xlarge"
+  sentry_instance_type = "t3.medium"
   signer_instance_type = "t3.micro"
   moniker = "defiantlabs"
 }
@@ -16,9 +16,9 @@ module "vpc" {
 
   azs             = ["us-east-1a", "us-east-1b", "us-east-1c"]
   public_subnets  = ["10.1.129.0/24", "10.1.130.0/24", "10.1.131.0/24"]
-  # private_subnets = ["10.1.1.0/24", "10.1.2.0/24", "10.1.3.0/24"]
-  # enable_nat_gateway = true
-  # single_nat_gateway = true
+  private_subnets = ["10.1.1.0/24", "10.1.2.0/24", "10.1.3.0/24"]
+  enable_nat_gateway = true
+  single_nat_gateway = true
 
   tags = {
     chain = "juno"
@@ -204,80 +204,80 @@ module "sentry_0" {
 
 }
 
-# module "horcrux_0" {
-#   source = "../../horcrux/"
+module "horcrux_0" {
+  source = "../../horcrux/"
 
-#   vpc_id = module.vpc.vpc_id
-#   vpc_security_group_ids = [
-#     aws_security_group.remote_signer.id,
-#     aws_security_group.signer_p2p_port.id
-#   ]
-#   subnet_id = module.vpc.private_subnets[0]
-#   private_ip = "10.1.1.10"
-#   peer_1_ip = "10.1.2.10"
-#   peer_2_ip = "10.1.3.10"
-#   sentry_1_ip = "10.1.129.10"
+  vpc_id = module.vpc.vpc_id
+  vpc_security_group_ids = [
+    aws_security_group.remote_signer.id,
+    aws_security_group.signer_p2p_port.id
+  ]
+  subnet_id = module.vpc.private_subnets[0]
+  private_ip = "10.1.1.10"
+  peer_1_ip = "10.1.2.10"
+  peer_2_ip = "10.1.3.10"
+  sentry_1_ip = "10.1.129.10"
 
-#   key_pair = local.signer_key_pair
+  key_pair = local.signer_key_pair
 
-#   instance_type = "t3.small"
-#   instance_name = "juno-uni-3-horcrux_0"  
-#   natgw_id = module.vpc.natgw_ids[0]
-#   node_chain_id = "uni-3"
+  instance_type = local.signer_instance_type
+  instance_name = "juno-uni-3-horcrux_0"  
+  natgw_id = module.vpc.natgw_ids[0]
+  node_chain_id = "uni-3"
 
-#   instance_root_storage_type = "gp3"
-#   instance_root_storage_iops = "3000"
-#   instance_root_storage_size = "20"
-# }
+  instance_root_storage_type = "gp3"
+  instance_root_storage_iops = "3000"
+  instance_root_storage_size = "20"
+}
 
-# module "horcrux_1" {
-#   source = "../../horcrux/"
+module "horcrux_1" {
+  source = "../../horcrux/"
 
-#   vpc_id = module.vpc.vpc_id
-#   vpc_security_group_ids = [
-#     aws_security_group.remote_signer.id,
-#     aws_security_group.signer_p2p_port.id
-#   ]
-#   subnet_id = module.vpc.private_subnets[1]
-#   private_ip = "10.1.2.10"
-#   peer_1_ip = "10.1.1.10"
-#   peer_2_ip = "10.1.3.10"
-#   sentry_1_ip = "10.1.129.10"
+  vpc_id = module.vpc.vpc_id
+  vpc_security_group_ids = [
+    aws_security_group.remote_signer.id,
+    aws_security_group.signer_p2p_port.id
+  ]
+  subnet_id = module.vpc.private_subnets[1]
+  private_ip = "10.1.2.10"
+  peer_1_ip = "10.1.1.10"
+  peer_2_ip = "10.1.3.10"
+  sentry_1_ip = "10.1.129.10"
 
-#   key_pair = local.signer_key_pair
+  key_pair = local.signer_key_pair
 
-#   instance_type = "t3.small"
-#   instance_name = "juno-uni-3-horcrux_1"
-#   natgw_id = module.vpc.natgw_ids[0]
-#   node_chain_id = "uni-3"
+  instance_type = local.signer_instance_type
+  instance_name = "juno-uni-3-horcrux_1"
+  natgw_id = module.vpc.natgw_ids[0]
+  node_chain_id = "uni-3"
 
-#   instance_root_storage_type = "gp3"
-#   instance_root_storage_iops = "3000"
-#   instance_root_storage_size = "20"
-# }
+  instance_root_storage_type = "gp3"
+  instance_root_storage_iops = "3000"
+  instance_root_storage_size = "20"
+}
 
-# module "horcrux_2" {
-#   source = "../../horcrux/"
+module "horcrux_2" {
+  source = "../../horcrux/"
 
-#   vpc_id = module.vpc.vpc_id
-#   vpc_security_group_ids = [
-#     aws_security_group.remote_signer.id,
-#     aws_security_group.signer_p2p_port.id
-#   ]
-#   subnet_id = module.vpc.private_subnets[2]
-#   private_ip = "10.1.3.10"
-#   peer_1_ip = "10.1.1.10"
-#   peer_2_ip = "10.1.2.10"
-#   sentry_1_ip = "10.1.129.10"
+  vpc_id = module.vpc.vpc_id
+  vpc_security_group_ids = [
+    aws_security_group.remote_signer.id,
+    aws_security_group.signer_p2p_port.id
+  ]
+  subnet_id = module.vpc.private_subnets[2]
+  private_ip = "10.1.3.10"
+  peer_1_ip = "10.1.1.10"
+  peer_2_ip = "10.1.2.10"
+  sentry_1_ip = "10.1.129.10"
 
-#   key_pair = local.signer_key_pair
+  key_pair = local.signer_key_pair
 
-#   instance_type = local.signer_instance_type
-#   instance_name = "juno-uni-3-horcrux_2"
-#   natgw_id = module.vpc.natgw_ids[0]
-#   node_chain_id = "uni-3"
+  instance_type = local.signer_instance_type
+  instance_name = "juno-uni-3-horcrux_2"
+  natgw_id = module.vpc.natgw_ids[0]
+  node_chain_id = "uni-3"
 
-#   instance_root_storage_type = "gp3"
-#   instance_root_storage_iops = "3000"
-#   instance_root_storage_size = "20"
-# }
+  instance_root_storage_type = "gp3"
+  instance_root_storage_iops = "3000"
+  instance_root_storage_size = "20"
+}

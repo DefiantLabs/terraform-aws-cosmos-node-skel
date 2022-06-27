@@ -113,3 +113,30 @@ sudo wget -qcO - $__url | jq '.title = "cosmos_validator"' >$__file
 sudo -S systemctl daemon-reload
 sudo -S systemctl enable grafana-server
 sudo -S systemctl start grafana-server
+
+
+git clone https://github.com/strangelove-ventures/half-life.git
+cd half-life/
+cp config.yaml.example config.yaml
+go install
+
+# Setup Service
+sudo tee /etc/systemd/system/halflife.service<<EOF
+[Unit]
+Description=half-life
+After=network-online.target
+
+[Service]
+User=ubuntu
+ExecStart=/home/ubuntu/go/bin/halflife monitor -f /home/ubuntu/half-life/config.yaml
+Restart=on-failure
+RestartSec=3
+LimitNOFILE=4096
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo -S systemctl daemon-reload
+sudo -S systemctl enable halflife
+# sudo -S systemctl restart halflife

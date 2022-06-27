@@ -28,4 +28,4 @@ runcmd:
     chmod 755 /home/ubuntu/*.sh
     pwd
     ls
-    ./home/ubuntu/install_signer.sh
+    # ./home/ubuntu/install_signer.sh
