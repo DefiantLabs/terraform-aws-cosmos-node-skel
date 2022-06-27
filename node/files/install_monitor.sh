@@ -7,7 +7,7 @@ wget https://github.com/prometheus/prometheus/releases/download/v2.36.0/promethe
 tar -zxvf prometheus-2.36.0.linux-amd64.tar.gz
 cd prometheus-2.36.0.linux-amd64
 sudo mv prometheus /usr/bin/
-mkdir -p /etc/prometheus/
+sudo mkdir -p /etc/prometheus/
 sudo cp /home/ubuntu/prometheus.yml /etc/prometheus/prometheus.yml
 sudo sed -i "s/nodeval/$nodeval/" /etc/prometheus/prometheus.yml
 sudo sed -i "s/nodeacc/$nodeacc/" /etc/prometheus/prometheus.yml
