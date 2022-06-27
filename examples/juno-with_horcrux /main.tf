@@ -26,6 +26,7 @@ module "vpc" {
   }
 }
 
+#tfsec:ignore:aws-vpc-add-description-to-security-group-rule
 resource "aws_security_group" "node" {
   name        = "node"
   description = "Security group for node"
@@ -49,6 +50,7 @@ resource "aws_security_group" "node" {
   }
 }
 
+#tfsec:ignore:aws-vpc-add-description-to-security-group-rule
 resource "aws_security_group" "remote_signer" {
   name        = "remote_signer"
   description = "Security group for remote_signer"
@@ -72,7 +74,7 @@ resource "aws_security_group" "remote_signer" {
   }
 }
 
-
+#tfsec:ignore:aws-vpc-add-description-to-security-group-rule
 resource "aws_security_group" "node_p2p_port" {
   name        = "node_p2p_port"
   description = "Allow public to communicate over p2p"
@@ -90,6 +92,7 @@ resource "aws_security_group" "node_p2p_port" {
   }
 }
 
+#tfsec:ignore:aws-vpc-add-description-to-security-group-rule
 resource "aws_security_group" "signer_p2p_port" {
   name        = "signer_p2p_port"
   description = "Allow signers to communicate with each other p2p"
@@ -107,7 +110,7 @@ resource "aws_security_group" "signer_p2p_port" {
   }
 }
 
-
+#tfsec:ignore:aws-vpc-add-description-to-security-group-rule
 resource "aws_security_group" "private_validator_port" {
   name        = "private_validator_port"
   description = "Allow communication with the private validator interface"
