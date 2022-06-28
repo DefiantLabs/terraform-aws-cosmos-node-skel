@@ -19,15 +19,15 @@ git checkout
 make install
 cd ..
 
-
-case $(hostname -I | tr -d '\011\012\013\014\015\040') in
+export IP=$(hostname -I | tr -d '\011\012\013\014\015\040')
+case $IP in
     "10.1.1.10") horcrux config init ${node_chain_id} "tcp://${sentry_1_ip}:1234" -c -p "tcp://${peer_1_ip}:2222|2,tcp://${peer_2_ip}:2222|3" -l "tcp://${private_ip}:2222" -t 2 --timeout 1500ms
     ;;
     "10.1.2.10") horcrux config init ${node_chain_id} "tcp://${sentry_1_ip}:1234" -c -p "tcp://${peer_1_ip}:2222|1,tcp://${peer_2_ip}:2222|3" -l "tcp://${private_ip}:2222" -t 2 --timeout 1500ms
     ;;
     "10.1.3.10") horcrux config init ${node_chain_id} "tcp://${sentry_1_ip}:1234" -c -p "tcp://${peer_1_ip}:2222|1,tcp://${peer_2_ip}:2222|2" -l "tcp://${private_ip}:2222" -t 2 --timeout 1500ms
     ;;
-    *) echo ${private_ip} not found in map. && exit 1
+    *) echo $IP not found in map. && exit 1
     ;;
 esac
 
@@ -84,3 +84,25 @@ sudo -S systemctl daemon-reload
 sudo -S systemctl enable node_exporter
 sudo -S systemctl start node_exporter
 
+
+#Hostnames
+
+export IP=$(hostname -I | tr -d '\011\012\013\014\015\040')
+case $IP in
+    "10.1.1.10") sudo hostnamectl set-hostname horxrux-0 ;;
+    "10.1.2.10") sudo hostnamectl set-hostname horxrux-1 ;;
+    "10.1.3.10") sudo hostnamectl set-hostname horxrux-2 ;;
+    "10.1.1.11") sudo hostnamectl set-hostname monitor-0 ;;
+    "10.1.129.10") sudo hostnamectl set-hostname chain-node-0 ;;
+    *) echo $IP not found in map. && exit 1
+    ;;
+esac
+
+
+sudo tee -a /etc/hosts<<EOF
+10.1.1.10 horcrux-0
+10.1.2.10 horcrux-1
+10.1.3.10 horcrux-2
+10.1.1.11 monitor-0
+10.1.129.10 chain-node-0
+EOF

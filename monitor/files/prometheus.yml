@@ -25,17 +25,17 @@ scrape_configs:
   - job_name: cosmos
     static_configs:
       - targets: [
-          10.1.129.10:26660
+          chain-node-0:26660
         ]
 
   - job_name: node
     static_configs:
       - targets: [
-          10.1.129.10:9105
-          10.1.2.10:9105
-          10.1.2.10:9105
-          10.1.3.10:9105
-          localhost:9105
+          "chain-node-0:9105",
+          "horcrux-0:9105",
+          "horcrux-1:9105",
+          "horcrux-2:9105",
+          "monitor-0:9105"
         ]
       
   # specific validator(s)
@@ -51,7 +51,7 @@ scrape_configs:
       - source_labels: [__param_address]
         target_label: instance
       - target_label: __address__
-        replacement: 10.1.129.10:9300
+        replacement: "chain-node-0:9300"
   # specific wallet(s)
   - job_name:       'wallet'
     scrape_interval: 15s
@@ -65,7 +65,7 @@ scrape_configs:
       - source_labels: [__param_address]
         target_label: instance
       - target_label: __address__
-        replacement: 10.1.129.10:9300
+        replacement: "chain-node-0:9300"
 
   # all validators
   - job_name:       'validators'
@@ -73,4 +73,4 @@ scrape_configs:
     metrics_path: /metrics/validators
     static_configs:
       - targets:
-        - 10.1.129.10:9300
+        - "chain-node-0:9300"

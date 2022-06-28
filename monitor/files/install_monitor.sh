@@ -115,3 +115,26 @@ EOF
 sudo -S systemctl daemon-reload
 sudo -S systemctl enable halflife
 # sudo -S systemctl restart halflife
+
+
+#Hostnames
+
+export IP=$(hostname -I | tr -d '\011\012\013\014\015\040')
+case $IP in
+    "10.1.1.10") sudo hostnamectl set-hostname horxrux-0 ;;
+    "10.1.2.10") sudo hostnamectl set-hostname horxrux-1 ;;
+    "10.1.3.10") sudo hostnamectl set-hostname horxrux-2 ;;
+    "10.1.1.11") sudo hostnamectl set-hostname monitor-0 ;;
+    "10.1.129.10") sudo hostnamectl set-hostname chain-node-0 ;;
+    *) echo $IP not found in map. && exit 1
+    ;;
+esac
+
+
+sudo tee -a /etc/hosts<<EOF
+10.1.1.10 horcrux-0
+10.1.2.10 horcrux-1
+10.1.3.10 horcrux-2
+10.1.1.11 monitor-0
+10.1.129.10 chain-node-0
+EOF
