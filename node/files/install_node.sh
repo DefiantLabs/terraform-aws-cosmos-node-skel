@@ -108,3 +108,59 @@ EOF
 sudo -S systemctl daemon-reload
 sudo -S systemctl enable cosmovisor
 sudo -S systemctl start cosmovisor
+
+
+# Prometheus Node Exporter
+wget https://github.com/prometheus/node_exporter/releases/download/v1.3.1/node_exporter-1.3.1.linux-amd64.tar.gz
+tar -zxvf node_exporter-1.3.1.linux-amd64.tar.gz
+cd node_exporter-1.3.1.linux-amd64
+sudo cp node_exporter /usr/bin/
+cd ..
+
+# Setup Service
+sudo tee /etc/systemd/system/node_exporter.service<<EOF
+[Unit]
+Description=node_exporter
+After=network-online.target
+
+[Service]
+User=ubuntu
+ExecStart=node_exporter --web.listen-address="0.0.0.0:9105"
+Restart=always
+RestartSec=3
+LimitNOFILE=4096
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo -S systemctl daemon-reload
+sudo -S systemctl enable node_exporter
+sudo -S systemctl start node_exporter
+
+# Cosmos Exporter
+wget https://github.com/solarlabsteam/cosmos-exporter/releases/download/v0.3.0/cosmos-exporter_0.3.0_Linux_x86_64.tar.gz
+tar -zxvf cosmos-exporter_0.3.0_Linux_x86_64.tar.gz
+sudo cp cosmos-exporter /usr/bin/
+cd ..
+
+# Setup Service
+sudo tee /etc/systemd/system/cosmos-exporter.service<<EOF
+[Unit]
+Description=cosmos-exporter
+After=network-online.target
+
+[Service]
+User=ubuntu
+ExecStart=/usr/bin/cosmos-exporter --denom u${node_denom} --denom-coefficient 1000000 --bech-prefix ${bech_prefix}
+Restart=always
+RestartSec=3
+LimitNOFILE=4096
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo -S systemctl daemon-reload
+sudo -S systemctl enable cosmos-exporter
+sudo -S systemctl start cosmos-exporter

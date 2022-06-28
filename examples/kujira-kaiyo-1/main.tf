@@ -86,6 +86,29 @@ resource "aws_security_group" "remote_signer" {
   }
 }
 
+resource "aws_security_group" "monitor" {
+  name        = "monitor"
+  description = "Security group for monitor" #tfsec:ignore:aws-vpc-add-description-to-security-group-rule
+  vpc_id      = module.vpc.vpc_id
+  ingress {
+    from_port = -1
+    to_port   = -1
+    protocol  = "icmp"
+    self      = true
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-egress-sgr
+  }
+
+  tags = {
+    Name = "monitor_securitygroup"
+  }
+}
+
 
 resource "aws_security_group" "node_p2p_port" {
   name        = "node_p2p_port"
@@ -162,29 +185,27 @@ resource "aws_security_group" "private_validator_port" {
 }
 
 
-resource "aws_security_group" "monitor" {
-  name        = "monitor"
-  description = "Security group for monitor" #tfsec:ignore:aws-vpc-add-description-to-security-group-rule
+resource "aws_security_group" "exporter_ports" {
+  name        = "exporter_ports"
+  description = "Allows cosmos_exporter, node_exporter and validator metrics" #tfsec:ignore:aws-vpc-add-description-to-security-group-rule
   vpc_id      = module.vpc.vpc_id
-  ingress {
-    from_port = -1
-    to_port   = -1
-    protocol  = "icmp"
-    self      = true
-  }
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"] #tfsec:ignore:aws-vpc-no-public-egress-sgr
+    dynamic "ingress" {
+    for_each = [9105, 26660, 9300]
+    content {
+      from_port   = ingress.value
+      to_port     = ingress.value
+      protocol    = "tcp"
+      security_groups = [
+        aws_security_group.monitor.id
+      ] 
+    }
   }
 
   tags = {
-    Name = "monitor_securitygroup"
+    Name = "cosmos_exporter, node"
   }
 }
-
 
 module "sentry_0" {
   source = "../../node/"
@@ -193,7 +214,8 @@ module "sentry_0" {
   vpc_security_group_ids = [
     aws_security_group.node.id,
     aws_security_group.node_p2p_port.id,
-    aws_security_group.private_validator_port.id
+    aws_security_group.private_validator_port.id,
+    aws_security_group.exporter_ports.id
   ]
   subnet_id  = module.vpc.public_subnets[0]
   az = module.vpc.azs[0]
@@ -271,7 +293,8 @@ module "horcrux_0" {
   vpc_id = module.vpc.vpc_id
   vpc_security_group_ids = [
     aws_security_group.remote_signer.id,
-    aws_security_group.signer_p2p_port.id
+    aws_security_group.signer_p2p_port.id,
+    aws_security_group.exporter_ports.id
   ]
   subnet_id   = module.vpc.private_subnets[0]
   private_ip  = "10.1.1.10"
@@ -297,7 +320,8 @@ module "horcrux_1" {
   vpc_id = module.vpc.vpc_id
   vpc_security_group_ids = [
     aws_security_group.remote_signer.id,
-    aws_security_group.signer_p2p_port.id
+    aws_security_group.signer_p2p_port.id,
+    aws_security_group.exporter_ports.id
   ]
   subnet_id   = module.vpc.private_subnets[1]
   private_ip  = "10.1.2.10"
@@ -323,7 +347,8 @@ module "horcrux_2" {
   vpc_id = module.vpc.vpc_id
   vpc_security_group_ids = [
     aws_security_group.remote_signer.id,
-    aws_security_group.signer_p2p_port.id
+    aws_security_group.signer_p2p_port.id,
+    aws_security_group.exporter_ports.id
   ]
   subnet_id   = module.vpc.private_subnets[2]
   private_ip  = "10.1.3.10"

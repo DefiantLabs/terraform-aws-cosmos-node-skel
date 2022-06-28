@@ -41,6 +41,8 @@ resource "aws_s3_object" "install_node" {
   content_base64 = base64encode(
     templatefile("${path.module}/files/install_node.sh", {
       node_network         = var.node_network
+      node_denom  = var.node_denom
+      bech_prefix = var.bech_prefix
       node_binary          = var.node_binary
       node_source          = var.node_source
       node_dir             = var.node_dir
@@ -173,3 +175,4 @@ resource "aws_instance" "application_instance" {
     # GATEWAY = var.natgw_id
   }
 }
+

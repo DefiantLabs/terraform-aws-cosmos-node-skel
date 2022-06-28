@@ -51,7 +51,7 @@ After=network-online.target
 
 [Service]
 User=ubuntu
-ExecStart=node_exporter --web.listen-address=":9105"
+ExecStart=node_exporter --web.listen-address="0.0.0.0:9105"
 Restart=always
 RestartSec=3
 LimitNOFILE=4096
@@ -65,32 +65,7 @@ sudo -S systemctl enable node_exporter
 sudo -S systemctl start node_exporter
 
 
-# Cosmos Exporter
-wget https://github.com/solarlabsteam/cosmos-exporter/releases/download/v0.3.0/cosmos-exporter_0.3.0_Linux_x86_64.tar.gz
-tar -zxvf cosmos-exporter_0.3.0_Linux_x86_64.tar.gz
-sudo cp cosmos-exporter /usr/bin/
-cd ..
 
-# Setup Service
-sudo tee /etc/systemd/system/cosmos-exporter.service<<EOF
-[Unit]
-Description=cosmos-exporter
-After=network-online.target
-
-[Service]
-User=ubuntu
-ExecStart=cosmos-exporter --denom u${node_denom} --denom-coefficient 1000000 --bech-prefix ${bech_prefix}
-Restart=always
-RestartSec=3
-LimitNOFILE=4096
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-sudo -S systemctl daemon-reload
-sudo -S systemctl enable cosmos-exporter
-sudo -S systemctl start cosmos-exporter
 
 # Grafana
 
