@@ -78,3 +78,8 @@ variable "vpc_security_group_ids" {
   type        = list(any)
   default     = []
 }
+
+variable "ubuntu_ami" {
+  description = "ubuntu_ami"
+  type        = string
+}

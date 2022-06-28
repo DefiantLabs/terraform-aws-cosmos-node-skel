@@ -147,3 +147,8 @@ variable "az" {
   description = "az"
   type        = string
 }
+
+variable "ubuntu_ami" {
+  description = "ubuntu_ami"
+  type        = string
+}

@@ -1,3 +1,24 @@
+data "aws_ami" "ubuntu" {
+  most_recent = true
+  owners      = ["099720109477"]
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64*"]
+  }
+
+  filter {
+    name   = "root-device-type"
+    values = ["ebs"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+}
+
+
 provider "aws" {
   default_tags {
     tags = {
@@ -7,17 +28,20 @@ provider "aws" {
   }
 }
 
+# These are what you can change without breaking.  The other values have deps and need to be changed carefully.
 locals {
   # Change these to a trusted pubic SSH Identity.
-  sentry_key_pair      = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCrTO9qkF76HhTUTZcEUV8c+p+oyfelTNqqK1hupvz7L/yX1I8Q8NGMRdrmIdRRj8JlAD5qughXVPCDj4HvTD1pLOQNV6E9CxPznOlb3ogQmdVmNvl/gyG8ySUPxldVnbBXZgChdi8xFjjzlHeNy+gIbbxHwsMS4k/Kk0N4s0dtEo2Hxz3VHpafzvpzhRWP0mstgPNWhyNlbwSh7ojx4zYug2mrKd560fcMP8fEx1RgZ5pLrSlLL8NHaJzc4EpiAFbqwS8SFM+HyABWWnjZhm7acdweboE9oahjMa/7UhUTgIN44E/fb1DLiAWARHru9/yaOan4uxzkGmHhtLa/xLjdrq5N9J3TlGGURJGtcHAY80MLPJ6IiYpCIM7JpYHn8eLrH8kbeSDQp6+Y3NtILBMxVxjkZ2UjJDMRQv9iprH5qc0uMP6IILm9x2tdmwpxl+emyDq22rE9JcvSqY4VSVYTpiIwKdJd9P/npAudCJjLCYOjSOUZ41Npb9cYqaYCfPGAu/jNmcoMy0F3wWVqHLDN7ngR+HO4sJiPXY+vcQU8PoMHuYm99jEh0U+TKk6S+KlGGwTAm002LVnKnkCRZSGXgnCJmj0dYiHaL2EhWnzS2TRsTyWhTGO/VOMwCvM+1MuHYMGJexeTPuTkLcbgUgWWtFBWslOn6oONqDPz95SBHQ== danb"
-  signer_key_pair      = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCrTO9qkF76HhTUTZcEUV8c+p+oyfelTNqqK1hupvz7L/yX1I8Q8NGMRdrmIdRRj8JlAD5qughXVPCDj4HvTD1pLOQNV6E9CxPznOlb3ogQmdVmNvl/gyG8ySUPxldVnbBXZgChdi8xFjjzlHeNy+gIbbxHwsMS4k/Kk0N4s0dtEo2Hxz3VHpafzvpzhRWP0mstgPNWhyNlbwSh7ojx4zYug2mrKd560fcMP8fEx1RgZ5pLrSlLL8NHaJzc4EpiAFbqwS8SFM+HyABWWnjZhm7acdweboE9oahjMa/7UhUTgIN44E/fb1DLiAWARHru9/yaOan4uxzkGmHhtLa/xLjdrq5N9J3TlGGURJGtcHAY80MLPJ6IiYpCIM7JpYHn8eLrH8kbeSDQp6+Y3NtILBMxVxjkZ2UjJDMRQv9iprH5qc0uMP6IILm9x2tdmwpxl+emyDq22rE9JcvSqY4VSVYTpiIwKdJd9P/npAudCJjLCYOjSOUZ41Npb9cYqaYCfPGAu/jNmcoMy0F3wWVqHLDN7ngR+HO4sJiPXY+vcQU8PoMHuYm99jEh0U+TKk6S+KlGGwTAm002LVnKnkCRZSGXgnCJmj0dYiHaL2EhWnzS2TRsTyWhTGO/VOMwCvM+1MuHYMGJexeTPuTkLcbgUgWWtFBWslOn6oONqDPz95SBHQ== danb"
+  sentry_key_pair       = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCrTO9qkF76HhTUTZcEUV8c+p+oyfelTNqqK1hupvz7L/yX1I8Q8NGMRdrmIdRRj8JlAD5qughXVPCDj4HvTD1pLOQNV6E9CxPznOlb3ogQmdVmNvl/gyG8ySUPxldVnbBXZgChdi8xFjjzlHeNy+gIbbxHwsMS4k/Kk0N4s0dtEo2Hxz3VHpafzvpzhRWP0mstgPNWhyNlbwSh7ojx4zYug2mrKd560fcMP8fEx1RgZ5pLrSlLL8NHaJzc4EpiAFbqwS8SFM+HyABWWnjZhm7acdweboE9oahjMa/7UhUTgIN44E/fb1DLiAWARHru9/yaOan4uxzkGmHhtLa/xLjdrq5N9J3TlGGURJGtcHAY80MLPJ6IiYpCIM7JpYHn8eLrH8kbeSDQp6+Y3NtILBMxVxjkZ2UjJDMRQv9iprH5qc0uMP6IILm9x2tdmwpxl+emyDq22rE9JcvSqY4VSVYTpiIwKdJd9P/npAudCJjLCYOjSOUZ41Npb9cYqaYCfPGAu/jNmcoMy0F3wWVqHLDN7ngR+HO4sJiPXY+vcQU8PoMHuYm99jEh0U+TKk6S+KlGGwTAm002LVnKnkCRZSGXgnCJmj0dYiHaL2EhWnzS2TRsTyWhTGO/VOMwCvM+1MuHYMGJexeTPuTkLcbgUgWWtFBWslOn6oONqDPz95SBHQ== danb"
+  signer_key_pair       = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCrTO9qkF76HhTUTZcEUV8c+p+oyfelTNqqK1hupvz7L/yX1I8Q8NGMRdrmIdRRj8JlAD5qughXVPCDj4HvTD1pLOQNV6E9CxPznOlb3ogQmdVmNvl/gyG8ySUPxldVnbBXZgChdi8xFjjzlHeNy+gIbbxHwsMS4k/Kk0N4s0dtEo2Hxz3VHpafzvpzhRWP0mstgPNWhyNlbwSh7ojx4zYug2mrKd560fcMP8fEx1RgZ5pLrSlLL8NHaJzc4EpiAFbqwS8SFM+HyABWWnjZhm7acdweboE9oahjMa/7UhUTgIN44E/fb1DLiAWARHru9/yaOan4uxzkGmHhtLa/xLjdrq5N9J3TlGGURJGtcHAY80MLPJ6IiYpCIM7JpYHn8eLrH8kbeSDQp6+Y3NtILBMxVxjkZ2UjJDMRQv9iprH5qc0uMP6IILm9x2tdmwpxl+emyDq22rE9JcvSqY4VSVYTpiIwKdJd9P/npAudCJjLCYOjSOUZ41Npb9cYqaYCfPGAu/jNmcoMy0F3wWVqHLDN7ngR+HO4sJiPXY+vcQU8PoMHuYm99jEh0U+TKk6S+KlGGwTAm002LVnKnkCRZSGXgnCJmj0dYiHaL2EhWnzS2TRsTyWhTGO/VOMwCvM+1MuHYMGJexeTPuTkLcbgUgWWtFBWslOn6oONqDPz95SBHQ== danb"
   monitor_key_pair      = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCrTO9qkF76HhTUTZcEUV8c+p+oyfelTNqqK1hupvz7L/yX1I8Q8NGMRdrmIdRRj8JlAD5qughXVPCDj4HvTD1pLOQNV6E9CxPznOlb3ogQmdVmNvl/gyG8ySUPxldVnbBXZgChdi8xFjjzlHeNy+gIbbxHwsMS4k/Kk0N4s0dtEo2Hxz3VHpafzvpzhRWP0mstgPNWhyNlbwSh7ojx4zYug2mrKd560fcMP8fEx1RgZ5pLrSlLL8NHaJzc4EpiAFbqwS8SFM+HyABWWnjZhm7acdweboE9oahjMa/7UhUTgIN44E/fb1DLiAWARHru9/yaOan4uxzkGmHhtLa/xLjdrq5N9J3TlGGURJGtcHAY80MLPJ6IiYpCIM7JpYHn8eLrH8kbeSDQp6+Y3NtILBMxVxjkZ2UjJDMRQv9iprH5qc0uMP6IILm9x2tdmwpxl+emyDq22rE9JcvSqY4VSVYTpiIwKdJd9P/npAudCJjLCYOjSOUZ41Npb9cYqaYCfPGAu/jNmcoMy0F3wWVqHLDN7ngR+HO4sJiPXY+vcQU8PoMHuYm99jEh0U+TKk6S+KlGGwTAm002LVnKnkCRZSGXgnCJmj0dYiHaL2EhWnzS2TRsTyWhTGO/VOMwCvM+1MuHYMGJexeTPuTkLcbgUgWWtFBWslOn6oONqDPz95SBHQ== danb"
-  sentry_instance_type = "m5.xlarge"
-  signer_instance_type = "t3.micro"
+  sentry_instance_type  = "m5.xlarge"
+  signer_instance_type  = "t3.micro"
   monitor_instance_type = "t3.small"
-  moniker              = "defiantlabs"
-  chain                = "kujira"
-  chain-id             = "kaiyo-1"
+  moniker               = "defiantlabs"
+  chain                 = "kujira"
+  chain-id              = "kaiyo-1"
+  ubuntu_ami            = "ami-01f18be4e32df20e2"
+  # ubuntu_ami           = data.aws_ami.ubuntu.id
 }
 
 module "vpc" {
@@ -41,16 +65,19 @@ module "vpc" {
 #tfsec:ignore:aws-vpc-no-public-egress-sgr
 resource "aws_security_group" "node" {
   name        = "node"
-  description = "Security group for node" #tfsec:ignore:aws-vpc-add-description-to-security-group-rule
+  description = "Security group for node"
   vpc_id      = module.vpc.vpc_id
+
   ingress {
-    from_port = -1
-    to_port   = -1
-    protocol  = "icmp"
-    self      = true
+    description = "Allow ICMP"
+    from_port   = -1
+    to_port     = -1
+    protocol    = "icmp"
+    self        = true
   }
 
   egress {
+    description = "Allow ALL"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
@@ -62,19 +89,20 @@ resource "aws_security_group" "node" {
   }
 }
 
-
 resource "aws_security_group" "remote_signer" {
   name        = "remote_signer"
-  description = "Security group for remote_signer" #tfsec:ignore:aws-vpc-add-description-to-security-group-rule
+  description = "Security group for remote_signer"
   vpc_id      = module.vpc.vpc_id
   ingress {
-    from_port = -1
-    to_port   = -1
-    protocol  = "icmp"
-    self      = true
+    description = "Allow ICMP"
+    from_port   = -1
+    to_port     = -1
+    protocol    = "icmp"
+    self        = true
   }
 
   egress {
+    description = "Allow ALL"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
@@ -88,16 +116,18 @@ resource "aws_security_group" "remote_signer" {
 
 resource "aws_security_group" "monitor" {
   name        = "monitor"
-  description = "Security group for monitor" #tfsec:ignore:aws-vpc-add-description-to-security-group-rule
+  description = "Security group for monitor"
   vpc_id      = module.vpc.vpc_id
   ingress {
-    from_port = -1
-    to_port   = -1
-    protocol  = "icmp"
-    self      = true
+    description = "Allow ICMP"
+    from_port   = -1
+    to_port     = -1
+    protocol    = "icmp"
+    self        = true
   }
 
   egress {
+    description = "Allow All"
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
@@ -112,10 +142,11 @@ resource "aws_security_group" "monitor" {
 
 resource "aws_security_group" "node_p2p_port" {
   name        = "node_p2p_port"
-  description = "Allow public to communicate over p2p" #tfsec:ignore:aws-vpc-add-description-to-security-group-rule
+  description = "Allow public to communicate over p2p"
   vpc_id      = module.vpc.vpc_id
 
   ingress {
+    description = "Allow p2p"
     from_port   = 26656
     to_port     = 26656
     protocol    = "tcp"
@@ -129,16 +160,17 @@ resource "aws_security_group" "node_p2p_port" {
 
 resource "aws_security_group" "node_rpc_port" {
   name        = "node_rpc_port"
-  description = "Allow monitor to communicate with nodes" #tfsec:ignore:aws-vpc-add-description-to-security-group-rule
+  description = "Allow monitor to communicate with nodes"
   vpc_id      = module.vpc.vpc_id
 
   ingress {
+    description = "Allow RPC"
     from_port   = 26657
     to_port     = 26657
     protocol    = "tcp"
     security_groups = [
       aws_security_group.monitor.id
-    ] 
+    ]
   }
 
   tags = {
@@ -149,14 +181,15 @@ resource "aws_security_group" "node_rpc_port" {
 
 resource "aws_security_group" "signer_p2p_port" {
   name        = "signer_p2p_port"
-  description = "Allow signers to communicate with each other p2p" #tfsec:ignore:aws-vpc-add-description-to-security-group-rule
+  description = "Allow signers to communicate with each other p2p"
   vpc_id      = module.vpc.vpc_id
 
   ingress {
-    from_port = 2222
-    to_port   = 2222
-    protocol  = "tcp"
-    self      = true
+    description = "Allow RAFT"
+    from_port   = 2222
+    to_port     = 2222
+    protocol    = "tcp"
+    self        = true
   }
 
   tags = {
@@ -167,16 +200,17 @@ resource "aws_security_group" "signer_p2p_port" {
 
 resource "aws_security_group" "private_validator_port" {
   name        = "private_validator_port"
-  description = "Allow communication with the private validator interface" #tfsec:ignore:aws-vpc-add-description-to-security-group-rule
+  description = "Allow communication with the private validator interface"
   vpc_id      = module.vpc.vpc_id
 
   ingress {
+    description = "Allow Private Validator"
     from_port   = 1234
     to_port     = 1234
     protocol    = "tcp"
     security_groups = [
       aws_security_group.remote_signer.id
-    ] 
+    ]
   }
 
   tags = {
@@ -187,18 +221,19 @@ resource "aws_security_group" "private_validator_port" {
 
 resource "aws_security_group" "exporter_ports" {
   name        = "exporter_ports"
-  description = "Allows cosmos_exporter, node_exporter and validator metrics" #tfsec:ignore:aws-vpc-add-description-to-security-group-rule
+  description = "Allows cosmos_exporter, node_exporter and validator metrics"
   vpc_id      = module.vpc.vpc_id
 
-    dynamic "ingress" {
+  dynamic "ingress" {
     for_each = [9105, 26660, 9300]
     content {
+      description = "Allow cosmos_exporter, node_exporter, and validator metrics"
       from_port   = ingress.value
       to_port     = ingress.value
       protocol    = "tcp"
       security_groups = [
         aws_security_group.monitor.id
-      ] 
+      ]
     }
   }
 
@@ -218,8 +253,9 @@ module "sentry_0" {
     aws_security_group.exporter_ports.id
   ]
   subnet_id  = module.vpc.public_subnets[0]
-  az = module.vpc.azs[0]
+  az         = module.vpc.azs[0]
   private_ip = "10.1.129.10"
+  ubuntu_ami = local.ubuntu_ami
 
   key_pair = local.sentry_key_pair
 
@@ -301,8 +337,8 @@ module "horcrux_0" {
   peer_1_ip   = "10.1.2.10"
   peer_2_ip   = "10.1.3.10"
   sentry_1_ip = "10.1.129.10"
-
-  key_pair = local.signer_key_pair
+  ubuntu_ami  = local.ubuntu_ami
+  key_pair    = local.signer_key_pair
 
   instance_type = local.signer_instance_type
   instance_name = "${local.chain}-${local.chain-id}-horcrux_0"
@@ -328,8 +364,8 @@ module "horcrux_1" {
   peer_1_ip   = "10.1.1.10"
   peer_2_ip   = "10.1.3.10"
   sentry_1_ip = "10.1.129.10"
-
-  key_pair = local.signer_key_pair
+  ubuntu_ami  = local.ubuntu_ami
+  key_pair    = local.signer_key_pair
 
   instance_type = local.signer_instance_type
   instance_name = "${local.chain}-${local.chain-id}-horcrux_1"
@@ -355,8 +391,8 @@ module "horcrux_2" {
   peer_1_ip   = "10.1.1.10"
   peer_2_ip   = "10.1.2.10"
   sentry_1_ip = "10.1.129.10"
-
-  key_pair = local.signer_key_pair
+  ubuntu_ami  = local.ubuntu_ami
+  key_pair    = local.signer_key_pair
 
   instance_type = local.signer_instance_type
   instance_name = "${local.chain}-${local.chain-id}-horcrux_2"
@@ -377,14 +413,14 @@ module "monitor_0" {
     aws_security_group.monitor.id
   ]
   subnet_id   = module.vpc.private_subnets[0]
-  node_denom           = "kuji"
-  bech_prefix          = "kuji"
+  node_denom  = "kuji"
+  bech_prefix = "kuji"
   private_ip  = "10.1.1.11"
   peer_1_ip   = "10.1.1.10"
   peer_2_ip   = "10.1.2.10"
   sentry_1_ip = "10.1.129.10"
-
-  key_pair = local.signer_key_pair
+  ubuntu_ami  = local.ubuntu_ami
+  key_pair    = local.signer_key_pair
 
   instance_type = local.signer_instance_type
   instance_name = "${local.chain}-${local.chain-id}-monitor_0"

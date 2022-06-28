@@ -135,10 +135,7 @@ resource "aws_iam_instance_profile" "application_instance_profile" {
 }
 
 resource "aws_instance" "application_instance" {
-  #checkov:skip=CKV_AWS_79
-  #checkov:skip=CKV_AWS_8
-  # ami = "ami-01f18be4e32df20e2"
-  ami           = data.aws_ami.ubuntu.id
+  ami = var.ubuntu_ami
   key_name               = aws_key_pair.monitor.key_name
   subnet_id              = var.subnet_id
   instance_type          = var.instance_type

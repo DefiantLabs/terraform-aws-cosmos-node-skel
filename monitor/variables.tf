@@ -88,3 +88,8 @@ variable "bech_prefix" {
   type        = string
   description = "bech_prefix"
 }
+
+variable "ubuntu_ami" {
+  description = "ubuntu_ami"
+  type        = string
+}

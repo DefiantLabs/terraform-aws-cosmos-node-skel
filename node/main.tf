@@ -6,29 +6,6 @@ data "aws_region" "current" {}
 
 data "aws_caller_identity" "current" {}
 
-
-data "aws_ami" "ubuntu" {
-  most_recent = true
-  owners      = ["099720109477"]
-
-  filter {
-    name   = "name"
-    values = ["ubuntu/images/hvm-ssd/ubuntu-focal-20.04-amd64*"]
-  }
-
-  filter {
-    name   = "root-device-type"
-    values = ["ebs"]
-  }
-
-  filter {
-    name   = "virtualization-type"
-    values = ["hvm"]
-  }
-}
-
-
-
 resource "aws_key_pair" "node" {
   key_name_prefix = "node"
   public_key      = var.key_pair
@@ -128,6 +105,7 @@ resource "aws_volume_attachment" "ebs_att" {
   instance_id = aws_instance.application_instance.id
 }
 
+#tfsec:ignore:aws-ebs-encryption-customer-key
 resource "aws_ebs_volume" "application_instance" {
   size              = var.instance_ebs_storage_size
   availability_zone = var.az
@@ -137,10 +115,7 @@ resource "aws_ebs_volume" "application_instance" {
 }
 
 resource "aws_instance" "application_instance" {
-  #checkov:skip=CKV_AWS_79
-  #checkov:skip=CKV_AWS_8
-  ami = "ami-01f18be4e32df20e2"
-  # ami           = data.aws_ami.ubuntu.id
+  ami = var.ubuntu_ami
   key_name               = aws_key_pair.node.key_name
   subnet_id              = var.subnet_id
   instance_type          = var.instance_type
@@ -169,10 +144,8 @@ resource "aws_instance" "application_instance" {
       ebs_block_device
     ]
   }
-  # Don't create instance untill network has internet.
   tags = {
     Name = "${var.instance_name}"
-    # GATEWAY = var.natgw_id
   }
 }
 
