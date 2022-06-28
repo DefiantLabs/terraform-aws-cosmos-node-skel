@@ -18,7 +18,6 @@ resource "aws_s3_object" "install_node" {
   content_base64 = base64encode(
     templatefile("${path.module}/files/install_node.sh", {
       node_network         = var.node_network
-      node_denom  = var.node_denom
       bech_prefix = var.bech_prefix
       node_binary          = var.node_binary
       node_source          = var.node_source
@@ -34,6 +33,30 @@ resource "aws_s3_object" "install_node" {
     })
   )
   etag = filemd5("${path.module}/files/install_node.sh")
+}
+
+resource "aws_s3_object" "install_node_exporter" {
+  bucket = aws_s3_bucket.conf_bucket.bucket
+  key    = "install_node_exporter.sh"
+  content_base64 = base64encode(
+    templatefile("${path.module}/files/install_node_exporter.sh", {
+      node_chain_id = var.node_chain_id
+    })
+  )
+  etag = filemd5("${path.module}/files/install_node_exporter.sh")
+}
+
+resource "aws_s3_object" "install_cosmos_exporter" {
+  bucket = aws_s3_bucket.conf_bucket.bucket
+  key    = "install_cosmos_exporter.sh"
+  content_base64 = base64encode(
+    templatefile("${path.module}/files/install_cosmos_exporter.sh", {
+      node_chain_id = var.node_chain_id
+      node_denom  = var.node_denom
+      bech_prefix = var.bech_prefix
+    })
+  )
+  etag = filemd5("${path.module}/files/install_cosmos_exporter.sh")
 }
 
 #Application resources

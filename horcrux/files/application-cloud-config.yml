@@ -28,4 +28,5 @@ runcmd:
     chmod 755 /home/ubuntu/*.sh
     cd /home/ubuntu
     sudo -u ubuntu /home/ubuntu/install_signer.sh
+    sudo -u ubuntu /home/ubuntu/install_node_exporter.sh
     chown -R ubuntu /home/ubuntu/

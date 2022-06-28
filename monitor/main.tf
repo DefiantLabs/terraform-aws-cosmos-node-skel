@@ -23,6 +23,17 @@ resource "aws_s3_object" "install_monitor" {
   etag = filemd5("${path.module}/files/install_monitor.sh")
 }
 
+resource "aws_s3_object" "install_node_exporter" {
+  bucket = aws_s3_bucket.conf_bucket.bucket
+  key    = "install_node_exporter.sh"
+  content_base64 = base64encode(
+    templatefile("${path.module}/files/install_node_exporter.sh", {
+      node_chain_id = var.node_chain_id
+    })
+  )
+  etag = filemd5("${path.module}/files/install_node_exporter.sh")
+}
+
 resource "aws_s3_object" "prometheus_conf" {
   bucket = aws_s3_bucket.conf_bucket.bucket
   key    = "prometheus.yml"

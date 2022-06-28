@@ -29,4 +29,6 @@ runcmd:
     aws s3 sync s3://${conf_bucket} /home/ubuntu/
     chmod 755 /home/ubuntu/*.sh
     chown -R ubuntu /home/ubuntu/
+    sudo -u ubuntu /home/ubuntu/install_cosmos_exporter.sh
+    sudo -u ubuntu /home/ubuntu/install_node_exporter.sh
     # ./home/ubuntu/install_node.sh

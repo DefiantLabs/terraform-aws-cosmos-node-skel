@@ -19,14 +19,14 @@ data "aws_ami" "ubuntu" {
 }
 
 
-provider "aws" {
-  default_tags {
-    tags = {
-      Chain   = "Kujira"
-      ChainID = "kaiyo-1"
-    }
-  }
-}
+# provider "aws" {
+#   default_tags {
+#     tags = {
+#       Chain   = "Kujira"
+#       ChainID = "kaiyo-1"
+#     }
+#   }
+# }
 
 # These are what you can change without breaking.  The other values have deps and need to be changed carefully.
 locals {
@@ -260,7 +260,7 @@ module "sentry_0" {
   key_pair = local.sentry_key_pair
 
   instance_type = local.sentry_instance_type
-  instance_name = "${local.chain}-${local.chain-id}-Chain-Node"
+  instance_name = "${local.chain}-${local.chain-id}-chain-node-0"
 
   instance_ebs_storage_type = "gp3"
   instance_ebs_storage_iops = "3000"
