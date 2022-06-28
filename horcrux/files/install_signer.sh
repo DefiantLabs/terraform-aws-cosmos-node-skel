@@ -1,4 +1,5 @@
 #!/bin/bash
+cd /home/ubuntu/
 
 # Install pre-requisites
 sudo apt-get install make build-essential chrony -y

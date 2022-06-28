@@ -1,4 +1,5 @@
 #!/bin/bash -x
+cd /home/ubuntu/
 exec > >(tee install_node.log)
 
 # HOME is not set in cloud-config.
@@ -19,15 +20,6 @@ EOF
 sudo chmod a+x /etc/profile.d/chain.sh
 
 . /etc/profile.d/chain.sh
-
-#mount EBS
-mkdir -p $DAEMON_HOME
-export disk=$(lsblk -J | jq -r '.blockdevices[]  | select(.mountpoint == null) | select(index("children") | not)' | jq -r '.name')
-sudo sh -c "echo /dev/$disk $DAEMON_HOME xfs defaults 0 0 >> /etc/fstab"
-sudo mkfs -t xfs /dev/$disk
-sudo mount -a
-sudo chown -R ubuntu $DAEMON_HOME /home/ubuntu/
-
 
 # Install pre-requisites
 sudo apt-get install make build-essential chrony -y

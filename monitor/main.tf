@@ -34,6 +34,15 @@ resource "aws_s3_object" "install_node_exporter" {
   etag = filemd5("${path.module}/files/install_node_exporter.sh")
 }
 
+resource "aws_s3_object" "cosmos_validator" {
+  bucket = aws_s3_bucket.conf_bucket.bucket
+  key    = "cosmos_validator.json"
+  content_base64 = base64encode(
+    file("${path.module}/files/cosmos_validator.json")
+  )
+  etag = filemd5("${path.module}/files/cosmos_validator.json")
+}
+
 resource "aws_s3_object" "prometheus_conf" {
   bucket = aws_s3_bucket.conf_bucket.bucket
   key    = "prometheus.yml"

@@ -1,4 +1,5 @@
 #!/bin/bash
+cd /home/ubuntu/
 export nodeval="nodeval"
 export nodeacc="nodeacc"
 
@@ -47,19 +48,29 @@ sudo apt-get update
 sudo apt-get install grafana
 
 # Install Default Dashboards
-mkdir -p /etc/grafana/provisioning/dashboards/
-mkdir -p /etc/grafana/provisioning/datasources/
-sudo cp /home/ubuntu/dashboard.yml /etc/grafana/provisioning/dashboards/
+sudo mkdir -p /etc/grafana/provisioning/dashboards/
+sudo mkdir -p /etc/grafana/provisioning/datasources/
 sudo cp /home/ubuntu/datasource.yml /etc/grafana/provisioning/datasources/
-__url='https://raw.githubusercontent.com/kj89/cosmos_node_monitoring/master/grafana/dashboards/cosmos_validator.json'
-__file='/etc/grafana/provisioning/dashboards/cosmos_validator.json'
-sudo wget -qcO - $__url | jq '.title = "cosmos_validator"' >$__file
+sudo cp /home/ubuntu/dashboard.yml /etc/grafana/provisioning/dashboards/
+sudo cp /home/ubuntu/cosmos_validator.json /etc/grafana/provisioning/dashboards/
+
 
 sudo -S systemctl daemon-reload
 sudo -S systemctl enable grafana-server
 sudo -S systemctl start grafana-server
 
 
+# Install pre-requisites
+sudo apt-get install make build-essential chrony -y
+
+# Install Go
+git clone https://github.com/udhos/update-golang
+cd update-golang
+sudo ./update-golang.sh
+. /etc/profile.d/golang_path.sh
+cd ..
+
+# Install half-life
 git clone https://github.com/strangelove-ventures/half-life.git
 cd half-life/
 cp config.yaml.example config.yaml

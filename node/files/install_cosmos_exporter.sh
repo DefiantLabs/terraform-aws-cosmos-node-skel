@@ -1,4 +1,6 @@
 #!/bin/bash
+cd /home/ubuntu/
+
 # Cosmos Exporter
 wget https://github.com/solarlabsteam/cosmos-exporter/releases/download/v0.3.0/cosmos-exporter_0.3.0_Linux_x86_64.tar.gz
 tar -zxvf cosmos-exporter_0.3.0_Linux_x86_64.tar.gz

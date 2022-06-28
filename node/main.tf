@@ -35,6 +35,17 @@ resource "aws_s3_object" "install_node" {
   etag = filemd5("${path.module}/files/install_node.sh")
 }
 
+resource "aws_s3_object" "mount_ebs" {
+  bucket = aws_s3_bucket.conf_bucket.bucket
+  key    = "mount_ebs.sh"
+  content_base64 = base64encode(
+    templatefile("${path.module}/files/mount_ebs.sh", {
+      node_dir             = var.node_dir
+    })
+  )
+  etag = filemd5("${path.module}/files/mount_ebs.sh")
+}
+
 resource "aws_s3_object" "install_node_exporter" {
   bucket = aws_s3_bucket.conf_bucket.bucket
   key    = "install_node_exporter.sh"
