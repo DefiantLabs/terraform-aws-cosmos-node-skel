@@ -22,12 +22,15 @@ cd ..
 
 export IP=$(hostname -I | tr -d '\011\012\013\014\015\040')
 case $IP in
-    "10.1.1.10") horcrux config init ${node_chain_id} "tcp://${sentry_1_ip}:1234" -c -p "tcp://${peer_1_ip}:2222|2,tcp://${peer_2_ip}:2222|3" -l "tcp://${private_ip}:2222" -t 2 --timeout 1500ms
-    ;;
-    "10.1.2.10") horcrux config init ${node_chain_id} "tcp://${sentry_1_ip}:1234" -c -p "tcp://${peer_1_ip}:2222|1,tcp://${peer_2_ip}:2222|3" -l "tcp://${private_ip}:2222" -t 2 --timeout 1500ms
-    ;;
-    "10.1.3.10") horcrux config init ${node_chain_id} "tcp://${sentry_1_ip}:1234" -c -p "tcp://${peer_1_ip}:2222|1,tcp://${peer_2_ip}:2222|2" -l "tcp://${private_ip}:2222" -t 2 --timeout 1500ms
-    ;;
+    "10.1.1.10")
+        horcrux config init ${node_chain_id} "tcp://${sentry_1_ip}:1234" -c -p "tcp://${peer_1_ip}:2222|2,tcp://${peer_2_ip}:2222|3" -l "tcp://${private_ip}:2222" -t 2 --timeout 1500ms
+        ;;
+    "10.1.2.10")
+        horcrux config init ${node_chain_id} "tcp://${sentry_1_ip}:1234" -c -p "tcp://${peer_1_ip}:2222|1,tcp://${peer_2_ip}:2222|3" -l "tcp://${private_ip}:2222" -t 2 --timeout 1500ms
+        ;;
+    "10.1.3.10")
+        horcrux config init ${node_chain_id} "tcp://${sentry_1_ip}:1234" -c -p "tcp://${peer_1_ip}:2222|1,tcp://${peer_2_ip}:2222|2" -l "tcp://${private_ip}:2222" -t 2 --timeout 1500ms
+        ;;
     *) echo $IP not found in map. && exit 1
     ;;
 esac

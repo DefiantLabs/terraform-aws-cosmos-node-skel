@@ -291,6 +291,7 @@ module "sentry_0" {
 
   # Extra commands to customize your node.
   extra_commands = <<EOF
+    wget https://raw.githubusercontent.com/Team-Kujira/networks/master/testnet/addrbook.json -O $DAEMON_HOME/config/addrbook.json
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.timeout_commit" 1500ms
     dasel put string -f $DAEMON_HOME/config/client.toml -p toml "chain-id" $CHAIN_ID
     dasel put string -f $DAEMON_HOME/config/app.toml -p toml "pruning" custom
@@ -310,14 +311,19 @@ module "sentry_0" {
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.external_address" $(curl -s ifconfig.me):26656
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.pex" true
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.laddr" tcp://0.0.0.0:26656
-    dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.seeds" fd1e3f9baf1922f81bfd9754ddbc4269dbf08264@uni.seed.rhinostake.com:26656
-    dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.persistent_peers" ec41af656b3450050ae27559b66b877373c44861@65.21.122.47:26656,2ae09360327854c79971d07245764626f43fdfc5@38.242.247.46:36656,d3bb05d61ebe83958a5ea2af2abf5d8fce620038@116.202.143.90:26656,c583f7bbfee00ca0ff0208663fe2d07014415ec9@185.213.27.145:36656
+    # dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.seeds" localhost:26656
+    # dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.persistent_peers" localhost:26656
 
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.addr_book_strict" false
-    dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.max_num_inbound_peers" 20
-    dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.max_num_outbound_peers" 20
+    dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.max_num_inbound_peers" 11
+    dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.max_num_outbound_peers" 11
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".instrumentation.prometheus" true
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".instrumentation.prometheus_listen_addr" 0.0.0.0:26660
+
+    dasel put string -f $DAEMON_HOME/config/config.toml -p toml "priv_validator_laddr" 0.0.0.0:1234
+    sed -e '/priv_validator_key_file/ s/^#*/#/' -i $DAEMON_HOME/config/config.toml
+    sed -e '/priv_validator_state_file/ s/^#*/#/' -i $DAEMON_HOME/config/config.toml
+
 
   EOF
 
