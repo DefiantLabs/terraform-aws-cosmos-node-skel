@@ -278,7 +278,7 @@ module "sentry_0" {
   node_chain_id        = "kaiyo-1"
   node_denom           = "kuji"
   bech_prefix          = "kuji"
-  node_genesis_command = "curl -s -o $DAEMON_HOME/config/genesis.json https://raw.githubusercontent.com/Team-Kujira/networks/master/testnet/harpoon-4.json"
+  node_genesis_command = "echo test"
 
   # Enable to build from snapshot.
   node_use_snapshot  = false
@@ -291,7 +291,6 @@ module "sentry_0" {
 
   # Extra commands to customize your node.
   extra_commands = <<EOF
-    wget https://raw.githubusercontent.com/Team-Kujira/networks/master/testnet/addrbook.json -O $DAEMON_HOME/config/addrbook.json
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.timeout_commit" 1500ms
     dasel put string -f $DAEMON_HOME/config/client.toml -p toml "chain-id" $CHAIN_ID
     dasel put string -f $DAEMON_HOME/config/app.toml -p toml "pruning" custom
@@ -311,8 +310,6 @@ module "sentry_0" {
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.external_address" $(curl -s ifconfig.me):26656
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.pex" true
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.laddr" tcp://0.0.0.0:26656
-    # dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.seeds" localhost:26656
-    # dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.persistent_peers" localhost:26656
 
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.addr_book_strict" false
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.max_num_inbound_peers" 11
@@ -320,9 +317,13 @@ module "sentry_0" {
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".instrumentation.prometheus" true
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".instrumentation.prometheus_listen_addr" 0.0.0.0:26660
 
-    dasel put string -f $DAEMON_HOME/config/config.toml -p toml "priv_validator_laddr" 0.0.0.0:1234
-    sed -e '/priv_validator_key_file/ s/^#*/#/' -i $DAEMON_HOME/config/config.toml
-    sed -e '/priv_validator_state_file/ s/^#*/#/' -i $DAEMON_HOME/config/config.toml
+    dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.seeds" f9ee35cf9aec3010f26b02e5b3354efaf1c02d53@116.203.135.192:26656
+    dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.persistent_peers" f9ee35cf9aec3010f26b02e5b3354efaf1c02d53@116.203.135.192:26656
+    # dasel put string -f $DAEMON_HOME/config/config.toml -p toml "priv_validator_laddr" 0.0.0.0:1234
+    # sed -e '/priv_validator_key_file/ s/^#*/#/' -i $DAEMON_HOME/config/config.toml
+    # sed -e '/priv_validator_state_file/ s/^#*/#/' -i $DAEMON_HOME/config/config.toml
+    # wget https://raw.githubusercontent.com/Team-Kujira/networks/master/testnet/addrbook.json -O $DAEMON_HOME/config/addrbook.json
+    curl -s -o $DAEMON_HOME/config/genesis.json https://raw.githubusercontent.com/Team-Kujira/networks/master/mainnet/kaiyo-1.snapshot.json
 
 
   EOF
