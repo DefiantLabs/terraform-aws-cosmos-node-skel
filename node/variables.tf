@@ -33,11 +33,6 @@ variable "node_source" {
   description = "node_source"
 }
 
-variable "node_genesis_command" {
-  type        = string
-  description = "node_genesis_command"
-}
-
 
 variable "node_use_snapshot" {
   type        = bool

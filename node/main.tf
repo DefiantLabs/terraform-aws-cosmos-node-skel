@@ -25,7 +25,6 @@ resource "aws_s3_object" "install_node" {
       node_version         = var.node_version
       node_chain_id        = var.node_chain_id
       node_denom           = var.node_denom
-      node_genesis_command = var.node_genesis_command
       node_use_snapshot    = var.node_use_snapshot
       node_snapshot_code   = var.node_snapshot_code
       extra_commands       = var.extra_commands

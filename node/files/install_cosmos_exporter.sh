@@ -8,7 +8,7 @@ cp cosmos-exporter /usr/bin/
 cd ..
 
 # Setup Service
-tee -a /etc/systemd/system/cosmos-exporter.service<<EOF
+sudo tee -a /etc/systemd/system/cosmos-exporter.service<<EOF
 [Unit]
 Description=cosmos-exporter
 After=network-online.target

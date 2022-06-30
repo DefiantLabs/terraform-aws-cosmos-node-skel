@@ -1,3 +1,28 @@
+# These are what you can change without breaking.  The other values have deps and need to be changed carefully.
+locals {
+  sentry_key_pair       = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCrTO9qkF76HhTUTZcEUV8c+p+oyfelTNqqK1hupvz7L/yX1I8Q8NGMRdrmIdRRj8JlAD5qughXVPCDj4HvTD1pLOQNV6E9CxPznOlb3ogQmdVmNvl/gyG8ySUPxldVnbBXZgChdi8xFjjzlHeNy+gIbbxHwsMS4k/Kk0N4s0dtEo2Hxz3VHpafzvpzhRWP0mstgPNWhyNlbwSh7ojx4zYug2mrKd560fcMP8fEx1RgZ5pLrSlLL8NHaJzc4EpiAFbqwS8SFM+HyABWWnjZhm7acdweboE9oahjMa/7UhUTgIN44E/fb1DLiAWARHru9/yaOan4uxzkGmHhtLa/xLjdrq5N9J3TlGGURJGtcHAY80MLPJ6IiYpCIM7JpYHn8eLrH8kbeSDQp6+Y3NtILBMxVxjkZ2UjJDMRQv9iprH5qc0uMP6IILm9x2tdmwpxl+emyDq22rE9JcvSqY4VSVYTpiIwKdJd9P/npAudCJjLCYOjSOUZ41Npb9cYqaYCfPGAu/jNmcoMy0F3wWVqHLDN7ngR+HO4sJiPXY+vcQU8PoMHuYm99jEh0U+TKk6S+KlGGwTAm002LVnKnkCRZSGXgnCJmj0dYiHaL2EhWnzS2TRsTyWhTGO/VOMwCvM+1MuHYMGJexeTPuTkLcbgUgWWtFBWslOn6oONqDPz95SBHQ== danb"
+  signer_key_pair       = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCrTO9qkF76HhTUTZcEUV8c+p+oyfelTNqqK1hupvz7L/yX1I8Q8NGMRdrmIdRRj8JlAD5qughXVPCDj4HvTD1pLOQNV6E9CxPznOlb3ogQmdVmNvl/gyG8ySUPxldVnbBXZgChdi8xFjjzlHeNy+gIbbxHwsMS4k/Kk0N4s0dtEo2Hxz3VHpafzvpzhRWP0mstgPNWhyNlbwSh7ojx4zYug2mrKd560fcMP8fEx1RgZ5pLrSlLL8NHaJzc4EpiAFbqwS8SFM+HyABWWnjZhm7acdweboE9oahjMa/7UhUTgIN44E/fb1DLiAWARHru9/yaOan4uxzkGmHhtLa/xLjdrq5N9J3TlGGURJGtcHAY80MLPJ6IiYpCIM7JpYHn8eLrH8kbeSDQp6+Y3NtILBMxVxjkZ2UjJDMRQv9iprH5qc0uMP6IILm9x2tdmwpxl+emyDq22rE9JcvSqY4VSVYTpiIwKdJd9P/npAudCJjLCYOjSOUZ41Npb9cYqaYCfPGAu/jNmcoMy0F3wWVqHLDN7ngR+HO4sJiPXY+vcQU8PoMHuYm99jEh0U+TKk6S+KlGGwTAm002LVnKnkCRZSGXgnCJmj0dYiHaL2EhWnzS2TRsTyWhTGO/VOMwCvM+1MuHYMGJexeTPuTkLcbgUgWWtFBWslOn6oONqDPz95SBHQ== danb"
+  monitor_key_pair      = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCrTO9qkF76HhTUTZcEUV8c+p+oyfelTNqqK1hupvz7L/yX1I8Q8NGMRdrmIdRRj8JlAD5qughXVPCDj4HvTD1pLOQNV6E9CxPznOlb3ogQmdVmNvl/gyG8ySUPxldVnbBXZgChdi8xFjjzlHeNy+gIbbxHwsMS4k/Kk0N4s0dtEo2Hxz3VHpafzvpzhRWP0mstgPNWhyNlbwSh7ojx4zYug2mrKd560fcMP8fEx1RgZ5pLrSlLL8NHaJzc4EpiAFbqwS8SFM+HyABWWnjZhm7acdweboE9oahjMa/7UhUTgIN44E/fb1DLiAWARHru9/yaOan4uxzkGmHhtLa/xLjdrq5N9J3TlGGURJGtcHAY80MLPJ6IiYpCIM7JpYHn8eLrH8kbeSDQp6+Y3NtILBMxVxjkZ2UjJDMRQv9iprH5qc0uMP6IILm9x2tdmwpxl+emyDq22rE9JcvSqY4VSVYTpiIwKdJd9P/npAudCJjLCYOjSOUZ41Npb9cYqaYCfPGAu/jNmcoMy0F3wWVqHLDN7ngR+HO4sJiPXY+vcQU8PoMHuYm99jEh0U+TKk6S+KlGGwTAm002LVnKnkCRZSGXgnCJmj0dYiHaL2EhWnzS2TRsTyWhTGO/VOMwCvM+1MuHYMGJexeTPuTkLcbgUgWWtFBWslOn6oONqDPz95SBHQ== danb"
+  sentry_instance_type  = "m5.2xlarge"
+  signer_instance_type  = "t3.micro"
+  monitor_instance_type = "t3.small"
+  moniker               = "changeme"
+  chain                 = "kujira"
+  chain-id              = "kaiyo-1"
+  ubuntu_ami           = data.aws_ami.ubuntu.id
+}
+
+terraform {
+  required_version = ">= 0.13.1"
+  required_providers {
+    aws = {
+      source  = "hashicorp/aws"
+      version = ">= 4.0"
+    }
+  }
+}
+
+
 data "aws_ami" "ubuntu" {
   most_recent = true
   owners      = ["099720109477"]
@@ -16,32 +41,6 @@ data "aws_ami" "ubuntu" {
     name   = "virtualization-type"
     values = ["hvm"]
   }
-}
-
-
-# provider "aws" {
-#   default_tags {
-#     tags = {
-#       Chain   = "Kujira"
-#       ChainID = "kaiyo-1"
-#     }
-#   }
-# }
-
-# These are what you can change without breaking.  The other values have deps and need to be changed carefully.
-locals {
-  # Change these to a trusted pubic SSH Identity.
-  sentry_key_pair       = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCrTO9qkF76HhTUTZcEUV8c+p+oyfelTNqqK1hupvz7L/yX1I8Q8NGMRdrmIdRRj8JlAD5qughXVPCDj4HvTD1pLOQNV6E9CxPznOlb3ogQmdVmNvl/gyG8ySUPxldVnbBXZgChdi8xFjjzlHeNy+gIbbxHwsMS4k/Kk0N4s0dtEo2Hxz3VHpafzvpzhRWP0mstgPNWhyNlbwSh7ojx4zYug2mrKd560fcMP8fEx1RgZ5pLrSlLL8NHaJzc4EpiAFbqwS8SFM+HyABWWnjZhm7acdweboE9oahjMa/7UhUTgIN44E/fb1DLiAWARHru9/yaOan4uxzkGmHhtLa/xLjdrq5N9J3TlGGURJGtcHAY80MLPJ6IiYpCIM7JpYHn8eLrH8kbeSDQp6+Y3NtILBMxVxjkZ2UjJDMRQv9iprH5qc0uMP6IILm9x2tdmwpxl+emyDq22rE9JcvSqY4VSVYTpiIwKdJd9P/npAudCJjLCYOjSOUZ41Npb9cYqaYCfPGAu/jNmcoMy0F3wWVqHLDN7ngR+HO4sJiPXY+vcQU8PoMHuYm99jEh0U+TKk6S+KlGGwTAm002LVnKnkCRZSGXgnCJmj0dYiHaL2EhWnzS2TRsTyWhTGO/VOMwCvM+1MuHYMGJexeTPuTkLcbgUgWWtFBWslOn6oONqDPz95SBHQ== danb"
-  signer_key_pair       = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCrTO9qkF76HhTUTZcEUV8c+p+oyfelTNqqK1hupvz7L/yX1I8Q8NGMRdrmIdRRj8JlAD5qughXVPCDj4HvTD1pLOQNV6E9CxPznOlb3ogQmdVmNvl/gyG8ySUPxldVnbBXZgChdi8xFjjzlHeNy+gIbbxHwsMS4k/Kk0N4s0dtEo2Hxz3VHpafzvpzhRWP0mstgPNWhyNlbwSh7ojx4zYug2mrKd560fcMP8fEx1RgZ5pLrSlLL8NHaJzc4EpiAFbqwS8SFM+HyABWWnjZhm7acdweboE9oahjMa/7UhUTgIN44E/fb1DLiAWARHru9/yaOan4uxzkGmHhtLa/xLjdrq5N9J3TlGGURJGtcHAY80MLPJ6IiYpCIM7JpYHn8eLrH8kbeSDQp6+Y3NtILBMxVxjkZ2UjJDMRQv9iprH5qc0uMP6IILm9x2tdmwpxl+emyDq22rE9JcvSqY4VSVYTpiIwKdJd9P/npAudCJjLCYOjSOUZ41Npb9cYqaYCfPGAu/jNmcoMy0F3wWVqHLDN7ngR+HO4sJiPXY+vcQU8PoMHuYm99jEh0U+TKk6S+KlGGwTAm002LVnKnkCRZSGXgnCJmj0dYiHaL2EhWnzS2TRsTyWhTGO/VOMwCvM+1MuHYMGJexeTPuTkLcbgUgWWtFBWslOn6oONqDPz95SBHQ== danb"
-  monitor_key_pair      = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCrTO9qkF76HhTUTZcEUV8c+p+oyfelTNqqK1hupvz7L/yX1I8Q8NGMRdrmIdRRj8JlAD5qughXVPCDj4HvTD1pLOQNV6E9CxPznOlb3ogQmdVmNvl/gyG8ySUPxldVnbBXZgChdi8xFjjzlHeNy+gIbbxHwsMS4k/Kk0N4s0dtEo2Hxz3VHpafzvpzhRWP0mstgPNWhyNlbwSh7ojx4zYug2mrKd560fcMP8fEx1RgZ5pLrSlLL8NHaJzc4EpiAFbqwS8SFM+HyABWWnjZhm7acdweboE9oahjMa/7UhUTgIN44E/fb1DLiAWARHru9/yaOan4uxzkGmHhtLa/xLjdrq5N9J3TlGGURJGtcHAY80MLPJ6IiYpCIM7JpYHn8eLrH8kbeSDQp6+Y3NtILBMxVxjkZ2UjJDMRQv9iprH5qc0uMP6IILm9x2tdmwpxl+emyDq22rE9JcvSqY4VSVYTpiIwKdJd9P/npAudCJjLCYOjSOUZ41Npb9cYqaYCfPGAu/jNmcoMy0F3wWVqHLDN7ngR+HO4sJiPXY+vcQU8PoMHuYm99jEh0U+TKk6S+KlGGwTAm002LVnKnkCRZSGXgnCJmj0dYiHaL2EhWnzS2TRsTyWhTGO/VOMwCvM+1MuHYMGJexeTPuTkLcbgUgWWtFBWslOn6oONqDPz95SBHQ== danb"
-  sentry_instance_type  = "m5.xlarge"
-  signer_instance_type  = "t3.micro"
-  monitor_instance_type = "t3.small"
-  moniker               = "defiantlabs"
-  chain                 = "kujira"
-  chain-id              = "kaiyo-1"
-  ubuntu_ami            = "ami-01f18be4e32df20e2"
-  # ubuntu_ami           = data.aws_ami.ubuntu.id
 }
 
 module "vpc" {
@@ -264,11 +263,11 @@ module "sentry_0" {
 
   instance_ebs_storage_type = "gp3"
   instance_ebs_storage_iops = "3000"
-  instance_ebs_storage_size = "300"
+  instance_ebs_storage_size = "400"
 
   instance_root_storage_type = "gp3"
   instance_root_storage_iops = "3000"
-  instance_root_storage_size = "20"
+  instance_root_storage_size = "25"
 
   node_source          = "https://github.com/Team-Kujira/core"
   node_binary          = "kujirad"
@@ -278,7 +277,6 @@ module "sentry_0" {
   node_chain_id        = "kaiyo-1"
   node_denom           = "kuji"
   bech_prefix          = "kuji"
-  node_genesis_command = "echo test"
 
   # Enable to build from snapshot.
   node_use_snapshot  = false
@@ -316,14 +314,13 @@ module "sentry_0" {
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.max_num_outbound_peers" 11
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".instrumentation.prometheus" true
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".instrumentation.prometheus_listen_addr" 0.0.0.0:26660
-
-    dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.seeds" f9ee35cf9aec3010f26b02e5b3354efaf1c02d53@116.203.135.192:26656
-    dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.persistent_peers" f9ee35cf9aec3010f26b02e5b3354efaf1c02d53@116.203.135.192:26656
-    # dasel put string -f $DAEMON_HOME/config/config.toml -p toml "priv_validator_laddr" 0.0.0.0:1234
-    # sed -e '/priv_validator_key_file/ s/^#*/#/' -i $DAEMON_HOME/config/config.toml
-    # sed -e '/priv_validator_state_file/ s/^#*/#/' -i $DAEMON_HOME/config/config.toml
-    # wget https://raw.githubusercontent.com/Team-Kujira/networks/master/testnet/addrbook.json -O $DAEMON_HOME/config/addrbook.json
-    curl -s -o $DAEMON_HOME/config/genesis.json https://raw.githubusercontent.com/Team-Kujira/networks/master/mainnet/kaiyo-1.snapshot.json
+  
+    dasel put string -f $DAEMON_HOME/config/config.toml -p toml "priv_validator_laddr" 0.0.0.0:1234
+    sed -e '/priv_validator_key_file/ s/^#*/#/' -i $DAEMON_HOME/config/config.toml
+    sed -e '/priv_validator_state_file/ s/^#*/#/' -i $DAEMON_HOME/config/config.toml
+    dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.seeds" 5a70fdcf1f51bb38920f655597ce5fc90b8b88b8@136.244.29.116:41656,2c0be5d48f1eb2ff7bd3e2a0b5b483835064b85a@95.216.7.241:41001
+    dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.persistent_peers" 9813378d0dceb86e57018bfdfbade9d863f6f3c8@3.38.73.119:26656,ccffabe81f2de8a81e171f93fe1209392bf9993f@65.108.234.59:26656,7878121e8fa201c836c8c0a95b6a9c7ac6e5b101@141.95.151.171:26656,0743497e30049ac8d59fee5b2ab3a49c3824b95c@198.244.200.196:26656,338d79e24ce36a9580ce3e9fce8eeb84e0e6f17b@[2a01:4f9:6b:2e5b::3]:26656,2efead362f0fc7b7fce0a64d05b56c5b28d5c2b4@164.92.209.72:36346,d24ee4b38c1ead082a7bcf8006617b640d3f5ab9@91.196.166.13:26656,5d0f0bc1c2d60f1d273165c5c8cefc3965c3d3c9@65.108.233.175:26656,5a70fdcf1f51bb38920f655597ce5fc90b8b88b8@136.244.29.116:41656,35af92154fdb2ac19f3f010c26cca9e5c175d054@65.108.238.61:27656,e65c2e27ea06b795a25f3ce813ed2062371705b8@213.239.212.121:13656,f6d0d3ac0c748a343368705c37cf51140a95929b@146.59.81.204:36656,ecafd5cadaf3526a588550a7bc343ce2670c988d@185.16.39.231:26656,afc247bceddc0eeeb6cf62db6fb4f985b03dd3b0@65.108.74.21:26656,94b124a422113f1871c3ea750097842004e4a095@18.222.185.33:26656,3c6e0c7b8be14ccf1717d84f3c11dcc1d2bfcba9@65.108.232.149:30095,f709e13a7fbbd34afe000e5534bf024fc981a16b@65.108.76.242:31095,00d610b86d500740bd41c9db0955865680138fdb@5.9.98.56:32095,2c0be5d48f1eb2ff7bd3e2a0b5b483835064b85a@95.216.7.241:41001,76b2b62f39d121c8248e6f61543c13830fd756af@77.68.22.110:26656
+    curl -s -o $DAEMON_HOME/config/genesis.json https://raw.githubusercontent.com/Team-Kujira/networks/master/mainnet/kaiyo-1.json
 
 
   EOF
@@ -355,6 +352,9 @@ module "horcrux_0" {
   instance_root_storage_type = "gp3"
   instance_root_storage_iops = "3000"
   instance_root_storage_size = "20"
+  extra_commands = <<EOF
+    echo hello
+  EOF
 }
 
 module "horcrux_1" {
@@ -382,6 +382,9 @@ module "horcrux_1" {
   instance_root_storage_type = "gp3"
   instance_root_storage_iops = "3000"
   instance_root_storage_size = "20"
+  extra_commands = <<EOF
+    echo hello
+  EOF
 }
 
 module "horcrux_2" {
@@ -409,6 +412,9 @@ module "horcrux_2" {
   instance_root_storage_type = "gp3"
   instance_root_storage_iops = "3000"
   instance_root_storage_size = "20"
+  extra_commands = <<EOF
+    echo hello
+  EOF
 }
 
 
@@ -437,4 +443,7 @@ module "monitor_0" {
   instance_root_storage_type = "gp3"
   instance_root_storage_iops = "3000"
   instance_root_storage_size = "20"
+  extra_commands = <<EOF
+    echo hello
+  EOF
 }

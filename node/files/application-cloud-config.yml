@@ -32,4 +32,4 @@ runcmd:
     sudo -u ubuntu /home/ubuntu/mount_ebs.sh
     sudo -u ubuntu /home/ubuntu/install_cosmos_exporter.sh
     sudo -u ubuntu /home/ubuntu/install_node_exporter.sh
-    # ./home/ubuntu/install_node.sh
+    sudo -u ubuntu /home/ubuntu/install_node.sh

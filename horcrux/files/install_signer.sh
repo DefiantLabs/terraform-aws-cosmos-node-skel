@@ -35,8 +35,8 @@ case $IP in
     ;;
 esac
 
-
 touch ~/.horcrux/share.json
+${extra_commands}
 
 # Setup Service
 sudo tee /etc/systemd/system/horcrux.service<<EOF
@@ -57,4 +57,4 @@ EOF
 
 sudo -S systemctl daemon-reload
 sudo -S systemctl enable horcrux
-# sudo -S systemctl start horcrux
+sudo -S systemctl start horcrux

@@ -45,6 +45,7 @@ resource "aws_s3_object" "install_signer" {
       peer_1_ip     = var.peer_1_ip
       peer_2_ip     = var.peer_2_ip
       sentry_1_ip   = var.sentry_1_ip
+      extra_commands       = var.extra_commands
 
     })
   )
