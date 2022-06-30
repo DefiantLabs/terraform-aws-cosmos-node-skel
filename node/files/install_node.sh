@@ -1,6 +1,5 @@
 #!/bin/bash -x
 cd /home/ubuntu/
-exec > >(tee /home/ubuntu/install_node.log)
 
 # HOME is not set in cloud-config.
 # export ROOT_DIR=`getent passwd "$(whoami)" | cut -d: -f6`
