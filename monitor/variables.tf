@@ -93,3 +93,9 @@ variable "ubuntu_ami" {
   description = "ubuntu_ami"
   type        = string
 }
+
+variable "extra_commands" {
+  description = "extra_commands"
+  type        = string
+  default = "echo hello"
+}

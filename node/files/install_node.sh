@@ -1,6 +1,6 @@
 #!/bin/bash -x
 cd /home/ubuntu/
-exec > >(tee install_node.log)
+exec > >(tee /home/ubuntu/install_node.log)
 
 # HOME is not set in cloud-config.
 # export ROOT_DIR=`getent passwd "$(whoami)" | cut -d: -f6`
@@ -72,7 +72,6 @@ if ${node_use_snapshot} ; then
   ${node_snapshot_code}
 fi
 
-${node_genesis_command}
 ${extra_commands}
 
 # Setup Service

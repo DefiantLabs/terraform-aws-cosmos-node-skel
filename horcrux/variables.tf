@@ -83,3 +83,9 @@ variable "ubuntu_ami" {
   description = "ubuntu_ami"
   type        = string
 }
+
+variable "extra_commands" {
+  type        = string
+  description = "extra_commands"
+  default = "sleep 1"
+}
