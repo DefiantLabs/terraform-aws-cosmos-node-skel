@@ -146,7 +146,7 @@ resource "aws_ebs_volume" "node_data" {
   iops = var.instance_ebs_storage_iops
   type = var.instance_ebs_storage_type
   tags = {
-    Snapshot = "Snapshot"
+    Snapshot = "true"
   }
 }
 
