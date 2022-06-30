@@ -134,17 +134,20 @@ resource "aws_eip" "application_instance" {
 
 resource "aws_volume_attachment" "ebs_att" {
   device_name = "/dev/xvdf"
-  volume_id   = aws_ebs_volume.application_instance.id
+  volume_id   = aws_ebs_volume.node_data.id
   instance_id = aws_instance.application_instance.id
 }
 
 #tfsec:ignore:aws-ebs-encryption-customer-key
-resource "aws_ebs_volume" "application_instance" {
+resource "aws_ebs_volume" "node_data" {
   size              = var.instance_ebs_storage_size
   availability_zone = var.az
   encrypted = true
   iops = var.instance_ebs_storage_iops
   type = var.instance_ebs_storage_type
+  tags = {
+    Snapshot = "Snapshot"
+  }
 }
 
 resource "aws_instance" "application_instance" {

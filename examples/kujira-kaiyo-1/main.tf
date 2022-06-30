@@ -9,7 +9,7 @@ locals {
   moniker               = "changeme"
   chain                 = "kujira"
   chain-id              = "kaiyo-1"
-  ubuntu_ami           = data.aws_ami.ubuntu.id
+  ubuntu_ami            = data.aws_ami.ubuntu.id
 }
 
 terraform {
@@ -269,14 +269,14 @@ module "sentry_0" {
   instance_root_storage_iops = "3000"
   instance_root_storage_size = "25"
 
-  node_source          = "https://github.com/Team-Kujira/core"
-  node_binary          = "kujirad"
-  node_dir             = "~/.kujira"
-  node_network         = "mainnet"
-  node_version         = "v0.4.0"
-  node_chain_id        = "kaiyo-1"
-  node_denom           = "kuji"
-  bech_prefix          = "kuji"
+  node_source   = "https://github.com/Team-Kujira/core"
+  node_binary   = "kujirad"
+  node_dir      = "~/.kujira"
+  node_network  = "mainnet"
+  node_version  = "v0.4.0"
+  node_chain_id = "kaiyo-1"
+  node_denom    = "kuji"
+  bech_prefix   = "kuji"
 
   # Enable to build from snapshot.
   node_use_snapshot  = false
@@ -314,7 +314,7 @@ module "sentry_0" {
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".p2p.max_num_outbound_peers" 11
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".instrumentation.prometheus" true
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml ".instrumentation.prometheus_listen_addr" 0.0.0.0:26660
-  
+
     dasel put string -f $DAEMON_HOME/config/config.toml -p toml "priv_validator_laddr" 0.0.0.0:1234
     sed -e '/priv_validator_key_file/ s/^#*/#/' -i $DAEMON_HOME/config/config.toml
     sed -e '/priv_validator_state_file/ s/^#*/#/' -i $DAEMON_HOME/config/config.toml
@@ -352,7 +352,7 @@ module "horcrux_0" {
   instance_root_storage_type = "gp3"
   instance_root_storage_iops = "3000"
   instance_root_storage_size = "20"
-  extra_commands = <<EOF
+  extra_commands             = <<EOF
     echo hello
   EOF
 }
@@ -382,7 +382,7 @@ module "horcrux_1" {
   instance_root_storage_type = "gp3"
   instance_root_storage_iops = "3000"
   instance_root_storage_size = "20"
-  extra_commands = <<EOF
+  extra_commands             = <<EOF
     echo hello
   EOF
 }
@@ -412,7 +412,7 @@ module "horcrux_2" {
   instance_root_storage_type = "gp3"
   instance_root_storage_iops = "3000"
   instance_root_storage_size = "20"
-  extra_commands = <<EOF
+  extra_commands             = <<EOF
     echo hello
   EOF
 }
@@ -443,7 +443,7 @@ module "monitor_0" {
   instance_root_storage_type = "gp3"
   instance_root_storage_iops = "3000"
   instance_root_storage_size = "20"
-  extra_commands = <<EOF
+  extra_commands             = <<EOF
     echo hello
   EOF
 }
