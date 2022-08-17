@@ -32,6 +32,9 @@ resource "aws_s3_object" "install_node" {
     })
   )
   etag = filemd5("${path.module}/files/install_node.sh")
+  lifecycle {
+    ignore_changes = all
+  }
 }
 
 resource "aws_s3_object" "mount_ebs" {
@@ -43,6 +46,9 @@ resource "aws_s3_object" "mount_ebs" {
     })
   )
   etag = filemd5("${path.module}/files/mount_ebs.sh")
+  lifecycle {
+    ignore_changes = all
+  }
 }
 
 resource "aws_s3_object" "install_node_exporter" {
@@ -54,6 +60,9 @@ resource "aws_s3_object" "install_node_exporter" {
     })
   )
   etag = filemd5("${path.module}/files/install_node_exporter.sh")
+  lifecycle {
+    ignore_changes = all
+  }
 }
 
 resource "aws_s3_object" "install_cosmos_exporter" {
@@ -67,6 +76,9 @@ resource "aws_s3_object" "install_cosmos_exporter" {
     })
   )
   etag = filemd5("${path.module}/files/install_cosmos_exporter.sh")
+  lifecycle {
+    ignore_changes = all
+  }
 }
 
 #Application resources

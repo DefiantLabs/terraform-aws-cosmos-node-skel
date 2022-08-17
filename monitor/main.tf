@@ -22,6 +22,9 @@ resource "aws_s3_object" "install_monitor" {
     })
   )
   etag = filemd5("${path.module}/files/install_monitor.sh")
+  lifecycle {
+    ignore_changes = all
+  }
 }
 
 resource "aws_s3_object" "install_node_exporter" {
@@ -33,6 +36,9 @@ resource "aws_s3_object" "install_node_exporter" {
     })
   )
   etag = filemd5("${path.module}/files/install_node_exporter.sh")
+  lifecycle {
+    ignore_changes = all
+  }
 }
 
 resource "aws_s3_object" "cosmos_validator" {
@@ -42,6 +48,9 @@ resource "aws_s3_object" "cosmos_validator" {
     file("${path.module}/files/cosmos_validator.json")
   )
   etag = filemd5("${path.module}/files/cosmos_validator.json")
+  lifecycle {
+    ignore_changes = all
+  }
 }
 
 resource "aws_s3_object" "prometheus_conf" {
@@ -51,6 +60,9 @@ resource "aws_s3_object" "prometheus_conf" {
     file("${path.module}/files/prometheus.yml")
   )
   etag = filemd5("${path.module}/files/prometheus.yml")
+  lifecycle {
+    ignore_changes = all
+  }
 }
 
 resource "aws_s3_object" "dashboard" {
@@ -60,6 +72,9 @@ resource "aws_s3_object" "dashboard" {
     file("${path.module}/files/dashboard.yml")
   )
   etag = filemd5("${path.module}/files/dashboard.yml")
+  lifecycle {
+    ignore_changes = all
+  }
 }
 
 resource "aws_s3_object" "datasource" {
@@ -69,6 +84,9 @@ resource "aws_s3_object" "datasource" {
     file("${path.module}/files/datasource.yml")
   )
   etag = filemd5("${path.module}/files/datasource.yml")
+  lifecycle {
+    ignore_changes = all
+  }
 }
 
 
